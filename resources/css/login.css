@@ -514,6 +514,23 @@ body {
 }
 
 
+.error-message {
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.status-alert {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
 /* =========================================
    REGISTER
    ========================================= */

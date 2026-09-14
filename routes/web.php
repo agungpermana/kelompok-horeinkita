@@ -1,25 +1,29 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KatalogPaketController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminWarungController;
 
-Route::get('/admin/warung', [AdminWarungController::class, 'index'])
-    ->name('admin.warung.index');
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
-Route::get('/admin/warung/create', [AdminWarungController::class, 'create'])
-    ->name('admin.warung.create');
-
-Route::post('/admin/warung', [AdminWarungController::class, 'store'])
-    ->name('admin.warung.store');
-
-Route::delete('/admin/warung/{id}', [AdminWarungController::class, 'destroy'])
-    ->name('admin.warung.destroy');
-
-Route::resource('katalog-paket', KatalogPaketController::class);
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
-    ->name('admin.dashboard');
+
+Route::get('/dashboard', function () {
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

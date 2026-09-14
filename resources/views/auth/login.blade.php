@@ -106,18 +106,25 @@
                     </div>
 
 
+                    <!-- Session Status -->
+                    @if (session('status'))
+                        <div class="status-alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
                     <!-- Role Tabs -->
                     <div class="role-tabs">
 
-                        <button class="role-tab active">
+                        <button type="button" class="role-tab active">
                             Donatur
                         </button>
 
-                        <button class="role-tab">
+                        <button type="button" class="role-tab">
                             Penerima
                         </button>
 
-                        <button class="role-tab">
+                        <button type="button" class="role-tab">
                             Pemilik Warung
                         </button>
 
@@ -125,7 +132,8 @@
 
 
                     <!-- Login Form -->
-                    <form class="login-form">
+                    <form method="POST" action="{{ route('login') }}" class="login-form">
+                        @csrf
 
                         <div class="form-group">
 
@@ -135,9 +143,18 @@
 
                             <input
                                 id="email"
+                                name="email"
+                                value="{{ old('email') }}"
                                 placeholder="Detail akun anda"
                                 type="email"
+                                required
+                                autofocus
+                                autocomplete="username"
                             />
+
+                            @error('email')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
 
                         </div>
 
@@ -150,9 +167,16 @@
 
                             <input
                                 id="password"
+                                name="password"
                                 placeholder="••••••••••••"
                                 type="password"
+                                required
+                                autocomplete="current-password"
                             />
+
+                            @error('password')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
 
                         </div>
 
@@ -163,6 +187,8 @@
 
                                 <input
                                     type="checkbox"
+                                    name="remember"
+                                    id="remember_me"
                                 />
 
                                 <span>
@@ -172,9 +198,11 @@
                             </label>
 
 
-                            <a href="#" class="forgot-password">
-                                Lupa sandi?
-                            </a>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="forgot-password">
+                                    Lupa sandi?
+                                </a>
+                            @endif
 
                         </div>
 
@@ -195,7 +223,7 @@
                             Donatur baru?
                         </span>
 
-                        <a href="#">
+                        <a href="{{ route('register') }}">
                             Registrasi Akun
                         </a>
 
