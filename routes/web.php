@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\AdminWarungController;
+use App\Http\Controllers\DataPenerimaanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,6 +20,8 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('warung', AdminWarungController::class);
+    Route::resource('penerimas', DataPenerimaanController::class);
 });
 
 Route::middleware('auth')->group(function () {

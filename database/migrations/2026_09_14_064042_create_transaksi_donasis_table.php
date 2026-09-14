@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaksi_donasis', function (Blueprint $table) {
+        Schema::create('transaksi_donasi', function (Blueprint $table) {
             // Primary Key
-            $table->id();
+            $table->id('id_transaksi');
 
             // Foreign Keys
             $table->foreignId('id_donatur')
@@ -44,6 +44,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaksi_donasis');
+        Schema::dropIfExists('transaksi_donasi');
     }
 };

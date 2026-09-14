@@ -6,7 +6,7 @@
 
     <title>Tambah Pemilik Warung - Admin Wapen</title>
 
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    @vite(['resources/css/admin.css'])
 </head>
 <body>
 
@@ -34,7 +34,7 @@
             </li>
 
             <li>
-                <a href="#">
+                <a href="{{ route('admin.penerimas.index') }}">
                     Penerima Bantuan
                 </a>
             </li>

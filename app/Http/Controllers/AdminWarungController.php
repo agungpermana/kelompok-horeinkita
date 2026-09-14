@@ -25,7 +25,7 @@ class AdminWarungController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|max:50|unique:users,username',
+            'username' => 'required|string|max:50|unique:data_user,username',
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
             'nomor_hp' => 'required|string|max:20',
@@ -34,7 +34,7 @@ class AdminWarungController extends Controller
 
         User::create([
             'username' => $request->username,
-            'name' => $request->name,
+            'nama_lengkap' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
             'role' => 'warung',

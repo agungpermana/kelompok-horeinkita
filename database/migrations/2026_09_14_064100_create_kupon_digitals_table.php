@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('kupon_digital', function (Blueprint $table) {
             // Primary Key
-            $table->id();
+            $table->id('id_kupon');
 
-            // Foreign Key ke tabel transaksi_donasi
+            // Foreign Key ke tabel transaksi_donasis
             $table->foreignId('id_transaksi')
                   ->constrained('transaksi_donasi', 'id_transaksi')
                   ->onDelete('cascade');
