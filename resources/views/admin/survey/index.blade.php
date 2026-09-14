@@ -2,7 +2,7 @@
 <html lang="id"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Pemilik Warung - Admin Wapen</title>
+<title>Data Survey - Admin Wapen</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
@@ -126,12 +126,12 @@
 <span class="material-symbols-outlined">dashboard</span>
 <span class="font-label-md text-label-md">Dashboard</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="{{ route('admin.survey.index') }}">
-<span class="material-symbols-outlined">description</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-bold transition-all shadow-[0px_2px_4px_rgba(0,0,0,0.05)]" href="{{ route('admin.survey.index') }}">
+<span class="material-symbols-outlined" data-weight="fill">description</span>
 <span class="font-label-md text-label-md">Data Survey</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-bold transition-all shadow-[0px_2px_4px_rgba(0,0,0,0.05)]" href="{{ route('admin.warung.index') }}">
-<span class="material-symbols-outlined" data-weight="fill">storefront</span>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="{{ route('admin.warung.index') }}">
+<span class="material-symbols-outlined">storefront</span>
 <span class="font-label-md text-label-md">Pemilik Warung</span>
 </a>
 <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="{{ route('admin.penerimas.index') }}">
@@ -164,12 +164,12 @@
 <button class="md:hidden text-on-surface p-2 rounded-full hover:bg-surface-container">
 <span class="material-symbols-outlined">menu</span>
 </button>
-<h1 class="font-headline-md text-headline-md text-on-surface">Pemilik Warung</h1>
+<h1 class="font-headline-md text-headline-md text-on-surface">Data Survey</h1>
 </div>
 <div>
-<a href="{{ route('admin.warung.create') }}" class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+<a href="{{ route('admin.survey.create') }}" class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] hover:opacity-90 transition-opacity inline-flex items-center gap-2">
 <span class="material-symbols-outlined text-xl">add</span>
-Tambah Akun
+Input Hasil Survey
 </a>
 </div>
 </header>
@@ -188,23 +188,61 @@ Tambah Akun
 <thead class="bg-surface-container-low">
 <tr>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Username</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Email</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama Subjek</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Jenis</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Tanggal</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">RW</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Kelurahan</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No. HP</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Status</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Skor</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Foto</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Aksi</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant/30">
-@forelse($warung as $index => $akun)
+@forelse($surveys as $index => $survey)
 <tr class="hover:bg-surface-container-low/50 transition-colors">
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $index + 1 }}</td>
-<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->username }}</td>
-<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->nama_lengkap }}</td>
-<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->email ?? '-' }}</td>
-<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->nomor_hp }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $survey->nama_subjek }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $survey->jenis_survey }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $survey->tanggal_survey ? \Carbon\Carbon::parse($survey->tanggal_survey)->format('d-m-Y') : '-' }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $survey->lokasi_rw }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $survey->kelurahan ?? '-' }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $survey->nomor_telepon }}</td>
 <td class="px-stack-lg py-stack-md">
-<form action="{{ route('admin.warung.destroy', $akun->id_user) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
+@if($survey->status_kelayakan === 'lolos')
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-primary-container/10 text-primary-container font-label-sm text-label-sm rounded-full">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+Lolos
+</span>
+@elseif($survey->status_kelayakan === 'tidak_lolos')
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-error/10 text-error font-label-sm text-label-sm rounded-full">
+<span class="material-symbols-outlined text-sm">cancel</span>
+Tidak Lolos
+</span>
+@else
+<span class="font-body-sm text-on-surface-variant">-</span>
+@endif
+</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $survey->skor_kelayakan ?? '-' }}</td>
+<td class="px-stack-lg py-stack-md">
+@if($survey->foto_lokasi_url || $survey->foto_identitas_url || $survey->foto_dokumen_url)
+<a href="{{ route('admin.survey.edit', $survey->id_survey) }}" class="text-primary hover:text-primary-container transition-colors inline-flex items-center gap-1 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-lg">visibility</span>
+Lihat
+</a>
+@else
+<span class="font-body-sm text-on-surface-variant">-</span>
+@endif
+</td>
+<td class="px-stack-lg py-stack-md">
+<div class="flex items-center gap-2">
+<a href="{{ route('admin.survey.edit', $survey->id_survey) }}" class="px-4 py-2 bg-primary/10 text-primary font-label-md text-label-md rounded-lg hover:bg-primary/20 transition-colors inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">edit</span>
+Edit
+</a>
+<form action="{{ route('admin.survey.destroy', $survey->id_survey) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data survey ini?');">
 @csrf
 @method('DELETE')
 <button type="submit" class="px-4 py-2 bg-error/10 text-error font-label-md text-label-md rounded-lg hover:bg-error/20 transition-colors inline-flex items-center gap-1">
@@ -212,12 +250,13 @@ Tambah Akun
 Hapus
 </button>
 </form>
+</div>
 </td>
 </tr>
 @empty
 <tr>
-<td colspan="6" class="px-stack-lg py-stack-xl text-center font-body-sm text-on-surface-variant">
-Belum ada akun Pemilik Warung.
+<td colspan="11" class="px-stack-lg py-stack-xl text-center font-body-sm text-on-surface-variant">
+Belum ada data survey.
 </td>
 </tr>
 @endforelse
