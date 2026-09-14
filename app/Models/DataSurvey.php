@@ -12,10 +12,16 @@ class DataSurvey extends Model
     protected $fillable = [
         'nama_subjek',
         'jenis_survey',
+        'tanggal_survey',
         'lokasi_rw',
+        'kelurahan',
         'alamat_lengkap',
         'nomor_telepon',
         'status_kelayakan',
+        'skor_kelayakan',
         'catatan_survey',
+        'foto_lokasi_url',
+        'foto_identitas_url',
+        'foto_dokumen_url',
     ];
 }

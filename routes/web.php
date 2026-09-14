@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\SurveyController;
 use App\Http\Controllers\AdminWarungController;
 use App\Http\Controllers\DataPenerimaanController;
 
@@ -22,6 +23,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('warung', AdminWarungController::class);
     Route::resource('penerimas', DataPenerimaanController::class);
+    Route::resource('survey', SurveyController::class);
 });
 
 Route::middleware('auth')->group(function () {
