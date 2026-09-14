@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('data_warungs', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('id_user')->unsigned();
+            $table->bigInteger('id_survey')->unsigned();
+            $table->string('nama_warung', 100)->nullable();
+            $table->string('lokasi_rw', 100)->nullable();
+            $table->text('alamat_warung')->nullable();
+
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
