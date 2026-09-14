@@ -11,8 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kupon_digitals', function (Blueprint $table) {
+        Schema::create('kupon_digital', function (Blueprint $table) {
+            // Primary Key
             $table->id();
+
+            // Foreign Key ke tabel transaksi_donasi
+            $table->foreignId('id_transaksi')
+                  ->constrained('transaksi_donasi', 'id_transaksi')
+                  ->onDelete('cascade');
+
+            // Atribut sesuai ERD
+            $table->string('kode_kupon', 50);
+            $table->string('status_kupon')->nullable(); // Boleh diganti ->enum('status_kupon', ['aktif', 'terpakai', 'kadaluarsa']) jika nilai enum sudah ditentukan
+            $table->timestamp('tanggal_diterbitkan')->nullable();
+            $table->date('tanggal_kadaluarsa')->nullable();
+
             $table->timestamps();
         });
     }
@@ -22,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kupon_digitals');
+        Schema::dropIfExists('kupon_digital');
     }
 };

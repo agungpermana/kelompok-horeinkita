@@ -12,7 +12,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transaksi_donasis', function (Blueprint $table) {
+            // Primary Key
             $table->id();
+
+            // Foreign Keys
+            $table->foreignId('id_donatur')
+                  ->constrained('data_user', 'id_user')
+                  ->onDelete('cascade');
+
+            $table->foreignId('id_penerima')
+                  ->constrained('data_penerima', 'id_penerima')
+                  ->onDelete('cascade');
+
+            $table->foreignId('id_paket')
+                  ->constrained('katalog_paket', 'id_paket')
+                  ->onDelete('cascade');
+
+            // Atribut sesuai ERD
+            $table->integer('jumlah_paket');
+            $table->decimal('total_bayar', 12, 2);
+            $table->string('metode_pembayaran', 50);
+            $table->string('status_pembayaran')->nullable(); // atau ->enum('status_pembayaran', ['...'])
+            $table->timestamp('tanggal_transaksi')->nullable();
+
             $table->timestamps();
         });
     }

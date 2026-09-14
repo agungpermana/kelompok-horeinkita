@@ -11,8 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bukti_penyerahans', function (Blueprint $table) {
+        Schema::create('bukti_penyerahan', function (Blueprint $table) {
+            // Primary Key
             $table->id();
+
+            // Foreign Keys
+            $table->foreignId('id_kupon')
+                  ->constrained('kupon_digital', 'id_kupon')
+                  ->onDelete('cascade');
+
+            $table->foreignId('id_warung')
+                  ->constrained('data_warung', 'id_warung')
+                  ->onDelete('cascade');
+
+            // Attributes
+            $table->string('foto_bukti_url', 255)->nullable();
+            $table->text('catatan_penyerahan')->nullable();
+            $table->timestamp('tanggal_penyerahan')->nullable();
+
             $table->timestamps();
         });
     }
@@ -22,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bukti_penyerahans');
+        Schema::dropIfExists('bukti_penyerahan');
     }
 };
