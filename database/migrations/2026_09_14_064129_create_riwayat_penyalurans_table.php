@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('waktu_pencatatan')->nullable();
             $table->timestamps();
             $table->foreign('id_bukti')
-                  ->references('id')
+                  ->references('id_bukti')
                   ->on('bukti_penyerahan')
                   ->onDelete('cascade');
         });

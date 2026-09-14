@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_surveys', function (Blueprint $table) {
-            $table->id();
+        Schema::create('data_survey', function (Blueprint $table) {
+            $table->id('id_survey');
             $table->string('nama_subjek');
             $table->string('jenis_survey');
             $table->string('lokasi_rw');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data_surveys');
+        Schema::dropIfExists('data_survey');
     }
 };

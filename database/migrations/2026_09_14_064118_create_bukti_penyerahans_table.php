@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bukti_penyerahan', function (Blueprint $table) {
             // Primary Key
-            $table->id();
+            $table->id('id_bukti');
 
             // Foreign Keys
             $table->foreignId('id_kupon')

@@ -1,0 +1,146 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7ff;
+    color: #1e293b;
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.form-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(8, 0, 181, 0.10);
+    border: 1px solid #e2e8f0;
+}
+
+.page-title {
+    margin: 0 0 8px;
+    color: #0800b5;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.page-description {
+    margin: 0 0 25px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* Tombol kembali */
+.back-button {
+    display: inline-block;
+    margin-bottom: 25px;
+    padding: 9px 16px;
+    background: #eef2ff;
+    color: #0800b5;
+    text-decoration: none;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.back-button:hover {
+    background: #dfe5ff;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #1e293b;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #0800b5;
+    box-shadow: 0 0 0 3px rgba(8, 0, 181, 0.10);
+}
+
+.form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* Tombol simpan/update */
+.submit-button {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    background: #0800b5;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.submit-button:hover {
+    background: #06008f;
+}
+
+/* Pesan error Laravel */
+.error-message {
+    margin-bottom: 20px;
+    padding: 12px 15px;
+    border-radius: 7px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 14px;
+}
+
+.error-message ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        margin: 25px auto;
+        padding: 0 15px;
+    }
+
+    .form-card {
+        padding: 22px;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+}

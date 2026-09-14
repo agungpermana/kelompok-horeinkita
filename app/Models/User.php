@@ -14,6 +14,16 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The table associated with the model.
+     */
+    protected $table = 'data_user';
+
+    /**
+     * The primary key associated with the table.
+     */
+    protected $primaryKey = 'id_user';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

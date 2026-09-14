@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KatalogPaket;
+use App\Models\katalog_paket as KatalogPaket;
 use Illuminate\Http\Request;
 
 class KatalogPaketController extends Controller

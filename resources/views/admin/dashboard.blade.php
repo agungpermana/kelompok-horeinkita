@@ -139,13 +139,13 @@
             </li>
 
             <li>
-                <a href="#">
+                <a href="{{ route('admin.warung.index') }}">
                     Pemilik Warung
                 </a>
             </li>
 
             <li>
-                <a href="#">
+                <a href="{{ route('admin.penerimas.index') }}">
                     Penerima Bantuan
                 </a>
             </li>
@@ -190,7 +190,7 @@
             <div class="card">
                 <h3>Penerima Bantuan</h3>
                 <div class="number">
-                    {{-- {{ $jumlahPenerima }} --}}
+                    {{ $jumlahPenerima }}
                 </div>
             </div>
 

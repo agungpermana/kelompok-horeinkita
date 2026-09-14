@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_warungs', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('id_user')->unsigned();
-            $table->bigInteger('id_survey')->unsigned();
+        Schema::create('data_warung', function (Blueprint $table) {
+            $table->id('id_warung');
+            $table->foreignId('id_user')
+                  ->constrained('data_user', 'id_user')
+                  ->onDelete('cascade');
+            $table->foreignId('id_survey')
+                  ->nullable()
+                  ->constrained('data_survey', 'id_survey')
+                  ->onDelete('set null');
             $table->string('nama_warung', 100)->nullable();
             $table->string('lokasi_rw', 100)->nullable();
             $table->text('alamat_warung')->nullable();
 
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data_warungs');
+        Schema::dropIfExists('data_warung');
     }
 };
