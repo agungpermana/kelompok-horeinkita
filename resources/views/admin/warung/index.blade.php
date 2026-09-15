@@ -192,6 +192,7 @@ Tambah Akun
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Email</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No. HP</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Role</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Aksi</th>
 </tr>
 </thead>
@@ -203,6 +204,12 @@ Tambah Akun
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->nama_lengkap }}</td>
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->email ?? '-' }}</td>
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->nomor_hp }}</td>
+<td class="px-stack-lg py-stack-md">
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-primary-container/10 text-primary-container font-label-sm text-label-sm rounded-full">
+<span class="material-symbols-outlined text-sm">storefront</span>
+Pemilik Warung
+</span>
+</td>
 <td class="px-stack-lg py-stack-md">
 <form action="{{ route('admin.warung.destroy', $akun->id_user) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
 @csrf
@@ -216,7 +223,7 @@ Hapus
 </tr>
 @empty
 <tr>
-<td colspan="6" class="px-stack-lg py-stack-xl text-center font-body-sm text-on-surface-variant">
+<td colspan="7" class="px-stack-lg py-stack-xl text-center font-body-sm text-on-surface-variant">
 Belum ada akun Pemilik Warung.
 </td>
 </tr>

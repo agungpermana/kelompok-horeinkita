@@ -8,27 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('data_user', function (Blueprint $table) {
-            $table->string('username', 50)->unique()->after('id_user');
-
-            $table->enum('role', ['admin', 'donatur', 'warung', 'penerima'])
-                ->default('donatur')
-                ->after('password');
-
-            $table->string('nomor_hp', 20)
-                ->nullable()
-                ->after('role');
-        });
+        // Kolom username, role, dan nomor_hp sudah didefinisikan di
+        // 0001_01_01_000000_create_users_table.php.
+        // Migration ini dipertahankan agar tidak merusak catatan
+        // migration yang sudah berjalan sebelumnya.
     }
 
     public function down(): void
     {
-        Schema::table('data_user', function (Blueprint $table) {
-            $table->dropColumn([
-                'username',
-                'role',
-                'nomor_hp'
-            ]);
-        });
+        // Tidak ada yang perlu dihapus karena kolom dikelola
+        // oleh migration pembuatan tabel data_user.
     }
 };

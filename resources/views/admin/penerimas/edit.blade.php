@@ -167,7 +167,7 @@
 <a class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-container" href="{{ route('admin.penerimas.index') }}">
 <span class="material-symbols-outlined">arrow_back</span>
 </a>
-<h1 class="font-headline-md text-headline-md text-on-surface">Edit Data Penerima</h1>
+<h1 class="font-headline-md text-headline-md text-on-surface">Edit Akun Penerima Bantuan</h1>
 </div>
 </header>
 
@@ -188,17 +188,55 @@
 @method('PUT')
 
 <section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Informasi Penerima</h2>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Informasi Akun</h2>
 <div class="space-y-stack-md">
 <div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="id_user">Nama</label>
-<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="id_user" name="id_user" required>
-<option value="">-- Pilih User --</option>
-@foreach($users as $user)
-<option value="{{ $user->id_user }}" {{ $penerima->id_user == $user->id_user ? 'selected' : '' }}>{{ $user->nama_lengkap }} ({{ $user->username }})</option>
-@endforeach
-</select>
+<label class="font-label-md text-label-md text-on-surface-variant" for="username">Username</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="username" name="username" type="text" value="{{ old('username', $penerima->user->username ?? '') }}" required/>
+@error('username')
+<span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
+@enderror
 </div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant" for="name">Nama Penerima Bantuan</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="name" name="name" type="text" value="{{ old('name', $penerima->user->nama_lengkap ?? '') }}" required/>
+@error('name')
+<span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
+@enderror
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant" for="email">Email</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="email" name="email" type="email" value="{{ old('email', $penerima->user->email ?? '') }}"/>
+@error('email')
+<span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
+@enderror
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant" for="nomor_hp">Nomor HP</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="nomor_hp" name="nomor_hp" type="text" value="{{ old('nomor_hp', $penerima->user->nomor_hp ?? '') }}" required/>
+@error('nomor_hp')
+<span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
+@enderror
+</div>
+</div>
+</div>
+</section>
+
+<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Keamanan</h2>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant" for="password">Password <span class="text-on-surface-variant/60 normal-case">(opsional, kosongkan jika tidak diubah)</span></label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="password" name="password" type="password"/>
+@error('password')
+<span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
+@enderror
+</div>
+</section>
+
+<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Spesifikasi Penerimaan</h2>
+<div class="space-y-stack-md">
 <div class="flex flex-col gap-2">
 <label class="font-label-md text-label-md text-on-surface-variant" for="id_survey">Data Survey (Opsional)</label>
 <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="id_survey" name="id_survey">
@@ -208,12 +246,6 @@
 @endforeach
 </select>
 </div>
-</div>
-</section>
-
-<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Lokasi & Alamat</h2>
-<div class="space-y-stack-md">
 <div class="flex flex-col gap-2">
 <label class="font-label-md text-label-md text-on-surface-variant" for="lokasi_rw">Lokasi RW</label>
 <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface placeholder:text-on-surface-variant/50" id="lokasi_rw" name="lokasi_rw" type="text" maxlength="10" value="{{ old('lokasi_rw', $penerima->lokasi_rw) }}" placeholder="Contoh: RW 05"/>
@@ -227,7 +259,7 @@
 
 <div class="pt-4 pb-8 flex justify-center">
 <button class="w-full md:w-auto px-12 py-4 bg-primary text-on-primary font-headline-sm text-headline-sm rounded-xl shadow-[0px_10px_20px_rgba(13,13,91,0.08)] hover:bg-primary-container hover:text-on-primary-container transition-all transform active:scale-[0.98]" type="submit">
-Update Data
+Update Akun
 </button>
 </div>
 </form>
