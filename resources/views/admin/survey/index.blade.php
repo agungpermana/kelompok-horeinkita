@@ -123,7 +123,15 @@
 </button>
 <h1 class="font-headline-md text-headline-md text-on-surface">Data Survey</h1>
 </div>
-<div>
+<div class="flex items-center gap-2">
+<a href="{{ route('admin.survey.export', ['format' => 'csv']) }}" class="px-4 py-2 bg-surface-container text-on-surface font-label-md text-label-md rounded-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] hover:bg-surface-container-high transition-colors inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">download</span>
+CSV
+</a>
+<a href="{{ route('admin.survey.export', ['format' => 'excel']) }}" class="px-4 py-2 bg-surface-container text-on-surface font-label-md text-label-md rounded-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] hover:bg-surface-container-high transition-colors inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">table_view</span>
+Excel
+</a>
 <a href="{{ route('admin.survey.create') }}" class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] hover:opacity-90 transition-opacity inline-flex items-center gap-2">
 <span class="material-symbols-outlined text-xl">add</span>
 Input Hasil Survey
@@ -145,14 +153,14 @@ Input Hasil Survey
 <thead class="bg-surface-container-low">
 <tr>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama Subjek</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Jenis</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Tanggal</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">RW</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Kelurahan</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No. HP</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Status</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Skor</th>
+@include('partials.sortable-th', ['sort' => 'nama_subjek', 'label' => 'Nama'])
+@include('partials.sortable-th', ['sort' => 'jenis_survey', 'label' => 'Kategori'])
+@include('partials.sortable-th', ['sort' => 'tanggal_survey', 'label' => 'Tanggal'])
+@include('partials.sortable-th', ['sort' => 'lokasi_rw', 'label' => 'RW'])
+@include('partials.sortable-th', ['sort' => 'kelurahan', 'label' => 'Kelurahan'])
+@include('partials.sortable-th', ['sort' => 'nomor_telepon', 'label' => 'No. HP'])
+@include('partials.sortable-th', ['sort' => 'status_kelayakan', 'label' => 'Status'])
+@include('partials.sortable-th', ['sort' => 'skor_kelayakan', 'label' => 'Skor'])
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Foto</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Aksi</th>
 </tr>
@@ -221,6 +229,7 @@ Belum ada data survey.
 </table>
 </div>
 </section>
+@include('partials.column-manager', ['key' => 'survey'])
 </div>
 </main>
 

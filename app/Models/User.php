@@ -25,7 +25,7 @@ class User extends Authenticatable
     /**
      * The primary key associated with the table.
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_user';
 
     /**
      * The attributes that are mass assignable.
@@ -33,7 +33,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'nama_lengkap',
         'email',
         'password',

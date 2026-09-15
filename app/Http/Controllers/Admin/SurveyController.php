@@ -3,17 +3,71 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesTableSorting;
 use App\Models\DataSurvey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class SurveyController extends Controller
 {
+    use HandlesTableSorting;
+
     public function index()
     {
-        $surveys = DataSurvey::latest()->get();
+        [$sort, $direction] = $this->sortQuery(
+            ['nama_subjek', 'jenis_survey', 'tanggal_survey', 'lokasi_rw', 'kelurahan', 'nomor_telepon', 'status_kelayakan', 'skor_kelayakan'],
+            'created_at'
+        );
+
+        $surveys = DataSurvey::orderBy($sort, $direction)->get();
 
         return view('admin.survey.index', compact('surveys'));
+    }
+
+    public function export()
+    {
+        $format = request()->query('format', 'csv');
+
+        $surveys = DataSurvey::orderByDesc('created_at')->get();
+
+        $filename = 'data-survey-' . now()->format('Y-m-d-Hi');
+
+        if ($format === 'excel') {
+            return response()
+                ->view('admin.survey.export', compact('surveys'), 200, [
+                    'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+                    'Content-Disposition' => 'attachment; filename="' . $filename . '.xls"',
+                ]);
+        }
+
+        return response()->streamDownload(function () use ($surveys) {
+            $handle = fopen('php://output', 'w');
+
+            fwrite($handle, "\xEF\xBB\xBF");
+
+            fputcsv($handle, [
+                'ID', 'Nama Subjek', 'Jenis Survey', 'Tanggal Survey', 'RW', 'Kelurahan',
+                'Alamat Lengkap', 'Nomor HP', 'Status Kelayakan', 'Skor Kelayakan', 'Catatan',
+            ]);
+
+            foreach ($surveys as $survey) {
+                fputcsv($handle, [
+                    $survey->id_survey,
+                    $survey->nama_subjek,
+                    $survey->jenis_survey,
+                    $survey->tanggal_survey,
+                    $survey->lokasi_rw,
+                    $survey->kelurahan,
+                    $survey->alamat_lengkap,
+                    $survey->nomor_telepon,
+                    $survey->status_kelayakan,
+                    $survey->skor_kelayakan,
+                    $survey->catatan_survey,
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename . '.csv', ['Content-Type' => 'text/csv']);
     }
 
     public function create()
