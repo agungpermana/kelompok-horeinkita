@@ -116,17 +116,19 @@
                     <!-- Role Tabs -->
                     <div class="role-tabs">
 
-                        <button type="button" class="role-tab active">
-                            Donatur
+                        <button type="button" class="role-tab active" data-role="donatur">
+                            donatur
                         </button>
 
-                        <button type="button" class="role-tab">
-                            Penerima
+                        <button type="button" class="role-tab" data-role="penerima">
+                            penerima
                         </button>
 
-                        <button type="button" class="role-tab">
-                            Pemilik Warung
+                        <button type="button" class="role-tab" data-role="pemilik warung">
+                            pemilik warung
                         </button>
+
+                        <span class="tab-indicator"></span>
 
                     </div>
 
@@ -263,5 +265,56 @@
 
     </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabsContainer = document.querySelector('.role-tabs');
+    const tabs = document.querySelectorAll('.role-tab');
+    const indicator = document.createElement('span');
+    indicator.className = 'tab-indicator';
+    tabsContainer.appendChild(indicator);
+    const forgotLink = document.querySelector('.forgot-password');
+    const registerSection = document.querySelector('.register-section');
+
+    // Set container to relative for absolute positioning of indicator
+    tabsContainer.style.position = 'relative';
+
+    // Style the indicator
+    indicator.style.position = 'absolute';
+    indicator.style.bottom = '0';
+    indicator.style.height = '2px';
+    indicator.style.backgroundColor = 'white';
+    indicator.style.transition = 'left 0.3s ease, width 0.3s ease';
+
+    function updateTab(index) {
+        // Update active tab
+        tabs.forEach((tab, i) => {
+            tab.classList.toggle('active', i === index);
+        });
+
+        const activeTab = tabs[index];
+        // Update indicator position and width
+        indicator.style.left = `${activeTab.offsetLeft}px`;
+        indicator.style.width = `${activeTab.offsetWidth}px`;
+
+        // Update register section visibility based on role
+        const role = activeTab.dataset.role || activeTab.textContent.trim().toLowerCase();
+        if (role === 'donatur') {
+            registerSection.style.display = '';
+        } else {
+            registerSection.style.display = 'none';
+        }
+    }
+
+    // Initialize: set first tab (donatur) as active
+    updateTab(0);
+
+    // Add click listeners to tabs
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+            updateTab(index);
+        });
+    });
+});
+</script>
 </body>
 </html>
