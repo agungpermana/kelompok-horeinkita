@@ -52,7 +52,7 @@ class AdminWarungController extends Controller
 
         // Otomatis buat entry di data_warung
         \App\Models\DataWarung::create([
-            'id_user'      => $user->id,
+            'id_user'      => $user->id_user,
             'nama_warung'  => $request->name . "'s Warung",
             'lokasi_rw'    => '-',
             'alamat_warung'=> '-',
