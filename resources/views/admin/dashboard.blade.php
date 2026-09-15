@@ -4,6 +4,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Dashboard Admin - Wapen</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <script>
@@ -156,7 +157,89 @@
 <h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Panel Administrasi</h2>
 <p class="font-body-md text-on-surface-variant">Admin dapat mengelola akun pengguna yang terlibat dalam sistem Wapen, termasuk Pemilik Warung, Penerima Bantuan, dan Donatur.</p>
 </section>
+
+@php
+$chartTotal = $statusBerhasil + $statusPending + $statusGagal + $statusDibatalkan;
+@endphp
+<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
+<div class="flex items-center gap-3 mb-stack-md">
+<span class="material-symbols-outlined text-primary text-3xl">pie_chart</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Transaksi per Status Pembayaran</h2>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-gutter">
+<div class="w-full md:w-1/2 max-w-sm">
+<canvas id="statusChart"></canvas>
+</div>
+<div class="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-stack-md">
+<div class="flex items-center gap-3 p-4 rounded-xl bg-surface-container-low">
+<span class="w-4 h-4 rounded-full bg-primary inline-block shrink-0"></span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Berhasil</p>
+<p class="font-headline-md text-headline-md text-primary">{{ $statusBerhasil }}</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-4 rounded-xl bg-surface-container-low">
+<span class="w-4 h-4 rounded-full bg-amber-500 inline-block shrink-0"></span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Pending</p>
+<p class="font-headline-md text-headline-md text-amber-700">{{ $statusPending }}</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-4 rounded-xl bg-surface-container-low">
+<span class="w-4 h-4 rounded-full bg-error inline-block shrink-0"></span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Gagal</p>
+<p class="font-headline-md text-headline-md text-error">{{ $statusGagal }}</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-4 rounded-xl bg-surface-container-low">
+<span class="w-4 h-4 rounded-full bg-outline inline-block shrink-0"></span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Dibatalkan</p>
+<p class="font-headline-md text-headline-md text-on-surface-variant">{{ $statusDibatalkan }}</p>
+</div>
+</div>
+</div>
+</div>
+@if($chartTotal === 0)
+<p class="mt-stack-md font-body-sm text-on-surface-variant">Belum ada data transaksi.</p>
+@endif
+</section>
 </div>
 </main>
+
+@if($chartTotal > 0)
+<script>
+      const startChart = () => {
+        const ctx = document.getElementById('statusChart');
+        new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: ['Berhasil', 'Pending', 'Gagal', 'Dibatalkan'],
+            datasets: [{
+              data: [{{ $statusBerhasil }}, {{ $statusPending }}, {{ $statusGagal }}, {{ $statusDibatalkan }}],
+              backgroundColor: ['#0800b5', '#f59e0b', '#ba1a1a', '#767588'],
+              borderColor: '#ffffff',
+              borderWidth: 2,
+              hoverOffset: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (item) => ` ${item.label}: ${item.raw} transaksi`
+                }
+              }
+            }
+          }
+        });
+      };
+      document.addEventListener('DOMContentLoaded', startChart);
+    </script>
+@endif
 
 </body></html>
