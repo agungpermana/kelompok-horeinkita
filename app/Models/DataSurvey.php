@@ -18,4 +18,14 @@ class DataSurvey extends Model
         'status_kelayakan',
         'catatan_survey',
     ];
+
+    public function data_warung()
+    {
+        return $this->hasOne(DataWarung::class, 'id_survey');
+    }
+
+    public function data_penerima()
+    {
+        return $this->hasOne(data_penerima::class, 'id_survey');
+    }
 }
