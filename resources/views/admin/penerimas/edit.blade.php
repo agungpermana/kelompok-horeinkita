@@ -226,34 +226,11 @@
 <section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
 <h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Keamanan</h2>
 <div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="password">Password <span class="text-on-surface-variant/60 normal-case">(opsional, kosongkan jika tidak diubah)</span></label>
+<label class="font-label-md text-label-md text-on-surface-variant" for="password">Password <span class="text-on-surface-variant/60 normal-case"></span></label>
 <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="password" name="password" type="password"/>
 @error('password')
 <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
 @enderror
-</div>
-</section>
-
-<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Spesifikasi Penerimaan</h2>
-<div class="space-y-stack-md">
-<div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="id_survey">Data Survey (Opsional)</label>
-<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="id_survey" name="id_survey">
-<option value="">-- Tanpa Survey --</option>
-@foreach($surveys as $survey)
-<option value="{{ $survey->id_survey }}" {{ $penerima->id_survey == $survey->id_survey ? 'selected' : '' }}>{{ $survey->nama_subjek }}</option>
-@endforeach
-</select>
-</div>
-<div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="lokasi_rw">Lokasi RW</label>
-<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface placeholder:text-on-surface-variant/50" id="lokasi_rw" name="lokasi_rw" type="text" maxlength="10" value="{{ old('lokasi_rw', $penerima->lokasi_rw) }}" placeholder="Contoh: RW 05"/>
-</div>
-<div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="alamat_penerima">Alamat Lengkap Penerima</label>
-<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface resize-y" id="alamat_penerima" name="alamat_penerima" rows="4" placeholder="Masukkan alamat lengkap penerima">{{ old('alamat_penerima', $penerima->alamat_penerima) }}</textarea>
-</div>
 </div>
 </section>
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\data_penerima;
-use App\Models\DataSurvey;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,21 +16,17 @@ class DataPenerimaanController extends Controller
 
     public function create()
     {
-        $surveys = DataSurvey::all();
-        return view('admin.penerimas.create', compact('surveys'));
+        return view('admin.penerimas.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'username'        => 'required|string|max:50|unique:data_user,username',
-            'name'            => 'required|string|max:255',
-            'email'           => 'nullable|email|max:255',
-            'nomor_hp'        => 'required|string|max:20',
-            'password'        => 'required|string|min:6',
-            'id_survey'       => 'nullable|exists:data_survey,id_survey',
-            'lokasi_rw'       => 'nullable|string|max:10',
-            'alamat_penerima' => 'nullable|string',
+            'username' => 'required|string|max:50|unique:data_user,username',
+            'name'     => 'required|string|max:255',
+            'email'    => 'nullable|email|max:255',
+            'nomor_hp' => 'required|string|max:20',
+            'password' => 'required|string|min:6',
         ]);
 
         $user = User::create([
@@ -44,10 +39,7 @@ class DataPenerimaanController extends Controller
         ]);
 
         data_penerima::create([
-            'id_user'         => $user->id_user,
-            'id_survey'       => $request->id_survey,
-            'lokasi_rw'       => $request->lokasi_rw,
-            'alamat_penerima' => $request->alamat_penerima,
+            'id_user' => $user->id_user,
         ]);
 
         return redirect()
@@ -58,9 +50,8 @@ class DataPenerimaanController extends Controller
     public function edit($id)
     {
         $penerima = data_penerima::with('user')->findOrFail($id);
-        $surveys = DataSurvey::all();
 
-        return view('admin.penerimas.edit', compact('penerima', 'surveys'));
+        return view('admin.penerimas.edit', compact('penerima'));
     }
 
     public function update(Request $request, $id)
@@ -68,14 +59,11 @@ class DataPenerimaanController extends Controller
         $penerima = data_penerima::findOrFail($id);
 
         $request->validate([
-            'username'        => 'required|string|max:50|unique:data_user,username,' . $penerima->id_user . ',id_user',
-            'name'            => 'required|string|max:255',
-            'email'           => 'nullable|email|max:255',
-            'nomor_hp'        => 'required|string|max:20',
-            'password'        => 'nullable|string|min:6',
-            'id_survey'       => 'nullable|exists:data_survey,id_survey',
-            'lokasi_rw'       => 'nullable|string|max:10',
-            'alamat_penerima' => 'nullable|string',
+            'username' => 'required|string|max:50|unique:data_user,username,' . $penerima->id_user . ',id_user',
+            'name'     => 'required|string|max:255',
+            'email'    => 'nullable|email|max:255',
+            'nomor_hp' => 'required|string|max:20',
+            'password' => 'nullable|string|min:6',
         ]);
 
         $userData = [
@@ -90,12 +78,6 @@ class DataPenerimaanController extends Controller
         }
 
         $penerima->user->update($userData);
-
-        $penerima->update([
-            'id_survey'       => $request->id_survey,
-            'lokasi_rw'       => $request->lokasi_rw,
-            'alamat_penerima' => $request->alamat_penerima,
-        ]);
 
         return redirect()->route('admin.penerimas.index')->with('success', 'Akun Penerima Bantuan berhasil diperbarui.');
     }
