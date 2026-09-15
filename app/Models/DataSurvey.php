@@ -24,4 +24,14 @@ class DataSurvey extends Model
         'foto_identitas_url',
         'foto_dokumen_url',
     ];
+
+    public function data_warung()
+    {
+        return $this->hasOne(DataWarung::class, 'id_survey');
+    }
+
+    public function data_penerima()
+    {
+        return $this->hasOne(data_penerima::class, 'id_survey');
+    }
 }

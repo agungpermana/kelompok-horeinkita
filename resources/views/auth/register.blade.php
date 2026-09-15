@@ -1,52 +1,263 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+    <title>Wapen - Portal Akses</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet"
+    />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    />
+
+    @vite(['resources/css/login.css'])
+</head>
+
+<body>
+
+    <!-- TopNavBar -->
+    <header class="top-header">
+        <div class="header-container">
+
+            <div class="brand">
+                <img
+                    alt="Wapen Logo"
+                    class="logo"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvnk2i00NmD8L08HpmANvvWsEDQNr-5rLZqiPZ53tzhIxK2CJoOsFQ4HrvC8UkT8dMs-ieB8JaOQBZoUtNpRykoqLsoH7O4YdnlgTki73II8DgKRy3t_1lHy1ucBQfysehvnUPLiEm0x0JxwLr27rq_ZmtI5UJXYi2kh0Jfabt3RmVT8wmovcV5Gbd-VtDOjKk5C3TcAkNQGr7ntkQVhLNVuQZqULjr6TPVKf77oxUrWQg4exAZYjFDhZ6RZncDa2tnZc"
+                />
+
+                <div>
+                    <h1 class="brand-title">WAPEN</h1>
+                    <span class="brand-subtitle">
+                        Warung Penyalur
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <div class="main-grid">
+
+            <!-- Left Side: Value Proposition -->
+            <div class="value-section">
+
+                <h2>
+                    Platform Penyalur Bantuan Warung Lokal.
+                </h2>
+
+                <p>
+                    Menghubungkan kedermawanan dengan transparansi penuh.
+                    Setiap donasi disalurkan langsung melalui mitra warung kami.
+                </p>
+
+                <div class="statistics">
+
+                    <div>
+                        <div class="stat-number">
+                            120+
+                        </div>
+
+                        <div class="stat-label">
+                            Mitra Warung
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="stat-number">
+                            5.4k
+                        </div>
+
+                        <div class="stat-label">
+                            Penerima Manfaat
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Right Side: Registration Card -->
+            <div class="login-wrapper">
+
+                <div class="login-card">
+
+                    <div class="login-header">
+
+                        <h3>
+                            Registrasi Donatur
+                        </h3>
+
+                        <p>
+                            Silakan lengkapi data untuk mendaftar sebagai Donatur
+                        </p>
+
+                    </div>
+
+
+                    <!-- Registration Form -->
+                    <form method="POST" action="{{ route('register') }}" class="login-form">
+                        @csrf
+
+                        <div class="form-group">
+
+                            <label for="name">
+                                Nama Lengkap
+                            </label>
+
+                            <input
+                                id="name"
+                                name="name"
+                                value="{{ old('name') }}"
+                                placeholder="Nama lengkap anda"
+                                type="text"
+                                required
+                                autofocus
+                            />
+
+                            @error('name')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Username / Email
+                            </label>
+
+                            <input
+                                id="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                placeholder="Username atau email"
+                                type="email"
+                                required
+                            />
+
+                            @error('email')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="password">
+                                Kata Sandi
+                            </label>
+
+                            <input
+                                id="password"
+                                name="password"
+                                placeholder="••••••••••••"
+                                type="password"
+                                required
+                            />
+
+                            @error('password')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="password_confirmation">
+                                Konfirmasi Kata Sandi
+                            </label>
+
+                            <input
+                                id="password_confirmation"
+                                name="password_confirmation"
+                                placeholder="••••••••••••"
+                                type="password"
+                                required
+                            />
+
+                            @error('password_confirmation')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+
+                        </div>
+
+
+                        <div class="login-options">
+
+                            <!-- No forgot password link on registration page -->
+
+                        </div>
+
+
+                        <button
+                            class="login-button"
+                            type="submit"
+                        >
+                            DAFTAR SEKARANG
+                        </button>
+
+                    </form>
+
+
+                    <div class="register-section">
+
+                        <span>
+                            Sudah punya akun?
+                        </span>
+
+                        <a href="{{ route('login') }}">
+                            Masuk Sistem
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <p>
+                © 2026 WAPEN - WARUNG PENYALUR
+            </p>
+
+            <div class="footer-links">
+
+                <a href="#">
+                    Kebijakan
+                </a>
+
+                <a href="#">
+                    Ketentuan
+                </a>
+
+            </div>
+
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    </footer>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</body>
+</html>

@@ -6,8 +6,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SurveyController;
 use App\Http\Controllers\AdminWarungController;
+use App\Http\Controllers\AdminDonaturController;
 use App\Http\Controllers\DataPenerimaanController;
+<<<<<<< HEAD
 use App\Http\Controllers\KatalogPaketController;
+=======
+use App\Http\Controllers\WarungKatalogController;
+>>>>>>> a624676987c38b06ab34a9c041062903f060e606
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +34,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('warung', AdminWarungController::class);
     Route::resource('penerimas', DataPenerimaanController::class);
     Route::resource('survey', SurveyController::class);
+    Route::get('donatur', [AdminDonaturController::class, 'index'])->name('donatur.index');
+    Route::delete('donatur/{id}', [AdminDonaturController::class, 'destroy'])->name('donatur.destroy');
+});
+
+Route::middleware(['auth', 'verified'])->prefix('warung')->name('warung.')->group(function () {
+    Route::resource('katalog', WarungKatalogController::class);
 });
 
 // Route pemilik warung
