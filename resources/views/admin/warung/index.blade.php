@@ -149,10 +149,6 @@ Tambah Akun
 @include('partials.sortable-th', ['sort' => 'nama_lengkap', 'label' => 'Nama'])
 @include('partials.sortable-th', ['sort' => 'email', 'label' => 'Email'])
 @include('partials.sortable-th', ['sort' => 'nomor_hp', 'label' => 'No. HP'])
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Username</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Email</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No. HP</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Aksi</th>
 </tr>
 </thead>
@@ -186,6 +182,7 @@ Belum ada akun Pemilik Warung.
 </table>
 </div>
 </section>
+@include('partials.column-manager', ['key' => 'warung'])
 </div>
 </main>
 
