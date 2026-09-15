@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PenyaluranController;
 use App\Http\Controllers\Admin\SurveyController;
+use App\Http\Controllers\Admin\TransaksiController;
 use App\Http\Controllers\AdminWarungController;
 use App\Http\Controllers\AdminDonaturController;
 use App\Http\Controllers\DataPenerimaanController;
@@ -33,6 +35,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('survey', SurveyController::class);
     Route::get('donatur', [AdminDonaturController::class, 'index'])->name('donatur.index');
     Route::delete('donatur/{id}', [AdminDonaturController::class, 'destroy'])->name('donatur.destroy');
+    Route::get('transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('penyaluran', [PenyaluranController::class, 'index'])->name('penyaluran.index');
 });
 
 // Route pemilik warung

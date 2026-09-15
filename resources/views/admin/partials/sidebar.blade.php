@@ -7,7 +7,10 @@
 </div>
 </div>
 <nav class="flex-1 flex flex-col gap-2">
-@php $isUsers = in_array($active ?? '', ['warung', 'penerimas', 'donatur'], true); @endphp
+@php
+$isUsers = in_array($active ?? '', ['warung', 'penerimas', 'donatur'], true);
+$isLaporan = in_array($active ?? '', ['transaksi', 'penyaluran'], true);
+@endphp
 <a class="flex items-center gap-3 px-4 py-3 rounded-lg {{ ($active ?? '') === 'dashboard' ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[0px_2px_4px_rgba(0,0,0,0.05)]' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all" href="{{ route('admin.dashboard') }}">
 <span class="material-symbols-outlined" @if(($active ?? '') === 'dashboard') data-weight="fill" @endif>dashboard</span>
 <span class="font-label-md text-label-md">Dashboard</span>
@@ -34,6 +37,23 @@
 <a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ ($active ?? '') === 'donatur' ? 'bg-secondary-container text-on-secondary-container font-bold' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all" href="{{ route('admin.donatur.index') }}">
 <span class="material-symbols-outlined" @if(($active ?? '') === 'donatur') data-weight="fill" @endif>volunteer_activism</span>
 <span class="font-label-md text-label-md">Donatur</span>
+</a>
+</div>
+</details>
+<details class="group" @if($isLaporan) open @endif>
+<summary class="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer list-none [&::-webkit-details-marker]:hidden {{ $isLaporan ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[0px_2px_4px_rgba(0,0,0,0.05)]' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all">
+<span class="material-symbols-outlined" @if($isLaporan) data-weight="fill" @endif>assessment</span>
+<span class="font-label-md text-label-md flex-1">Laporan</span>
+<span class="material-symbols-outlined text-lg transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<div class="ml-4 pl-4 border-l border-outline-variant mt-1 mb-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ ($active ?? '') === 'transaksi' ? 'bg-secondary-container text-on-secondary-container font-bold' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all" href="{{ route('admin.transaksi.index') }}">
+<span class="material-symbols-outlined" @if(($active ?? '') === 'transaksi') data-weight="fill" @endif>receipt_long</span>
+<span class="font-label-md text-label-md">Riwayat Transaksi</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg {{ ($active ?? '') === 'penyaluran' ? 'bg-secondary-container text-on-secondary-container font-bold' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all" href="{{ route('admin.penyaluran.index') }}">
+<span class="material-symbols-outlined" @if(($active ?? '') === 'penyaluran') data-weight="fill" @endif>bar_chart</span>
+<span class="font-label-md text-label-md">Laporan Penyaluran</span>
 </a>
 </div>
 </details>
