@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Tambah Paket Sembako - Wapen</title>
+<title>Edit Paket Sembako - Wapen</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -57,12 +57,13 @@ tailwind.config = {
             <span class="material-symbols-outlined text-xl">dashboard</span>
             <span class="text-sm">Dashboard</span>
         </a>
-        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="{{ route('katalog-paket.index') }}">
-            <span class="material-symbols-outlined text-xl">inventory_2</span>
+        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-semibold transition-all" href="{{ route('katalog-paket.index') }}">
+            <span class="material-symbols-outlined text-xl" data-weight="fill">inventory_2</span>
             <span class="text-sm">Katalog Sembako</span>
         </a>
-        <a class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-semibold transition-all" href="{{ route('katalog-paket.create') }}">
-            <span class="material-symbols-outlined text-xl" data-weight="fill">add_box</span>
+        <a href="{{ route('katalog-paket.create') }}"
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
+            <span class="material-symbols-outlined text-xl">add_box</span>
             <span class="text-sm">Tambah Paket</span>
         </a>
     </nav>
@@ -90,7 +91,7 @@ tailwind.config = {
         <a href="{{ route('katalog-paket.index') }}" class="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-surface-container transition-all text-on-surface-variant">
             <span class="material-symbols-outlined text-xl">arrow_back</span>
         </a>
-        <h1 class="text-xl font-semibold text-on-surface">Tambah Paket Sembako</h1>
+        <h1 class="text-xl font-semibold text-on-surface">Edit Paket Sembako</h1>
     </header>
 
     <div class="p-6 md:p-10 max-w-2xl">
@@ -107,74 +108,60 @@ tailwind.config = {
         @endif
 
         <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_2px_4px_rgba(0,0,0,0.05)] p-6">
-            <form action="{{ route('katalog-paket.store') }}" method="POST" class="space-y-5">
+            <form action="{{ route('katalog-paket.update', $paket->id_paket) }}" method="POST" class="space-y-5">
                 @csrf
+                @method('PUT')
 
                 <div>
                     <label class="block text-sm font-semibold text-on-surface mb-1.5">
-                        Warung <span class="text-red-500">*</span>
+                        Nama Paket <span class="text-red-500">*</span>
                     </label>
-                    <select name="id_warung" required
-                        class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                        <option value="">-- Pilih Warung --</option>
-                        @foreach(\App\Models\DataWarung::all() as $warung)
-                            <option value="{{ $warung->id_warung }}" {{ old('id_warung') == $warung->id_warung ? 'selected' : '' }}>
-                                {{ $warung->nama_warung }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('id_warung')
+                    <input type="text" name="nama_paket"
+                        value="{{ old('nama_paket', $paket->nama_paket) }}"
+                        placeholder="Contoh: Paket Sembako Hemat A"
+                        class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        required/>
+                    @error('nama_paket')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="border-t border-outline-variant/40 pt-5">
-                    <div class="mb-5">
+                <div>
+                    <label class="block text-sm font-semibold text-on-surface mb-1.5">Deskripsi</label>
+                    <textarea name="deskripsi" rows="3"
+                        placeholder="Isi paket: beras 5kg, minyak 1L, gula 1kg, ..."
+                        class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none">{{ old('deskripsi', $paket->deskripsi) }}</textarea>
+                    @error('deskripsi')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
                         <label class="block text-sm font-semibold text-on-surface mb-1.5">
-                            Nama Paket <span class="text-red-500">*</span>
+                            Harga (Rp) <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="nama_paket" value="{{ old('nama_paket') }}"
-                            placeholder="Contoh: Paket Sembako Hemat A"
+                        <input type="number" name="harga"
+                            value="{{ old('harga', $paket->harga) }}"
+                            min="0" placeholder="0"
                             class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                             required/>
-                        @error('nama_paket')
+                        @error('harga')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <div class="mb-5">
-                        <label class="block text-sm font-semibold text-on-surface mb-1.5">Deskripsi</label>
-                        <textarea name="deskripsi" rows="3"
-                            placeholder="Isi paket: beras 5kg, minyak 1L, gula 1kg, ..."
-                            class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none">{{ old('deskripsi') }}</textarea>
-                        @error('deskripsi')
+                    <div>
+                        <label class="block text-sm font-semibold text-on-surface mb-1.5">
+                            Stok <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="stok"
+                            value="{{ old('stok', $paket->stok) }}"
+                            min="0" placeholder="0"
+                            class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                            required/>
+                        @error('stok')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-on-surface mb-1.5">
-                                Harga (Rp) <span class="text-red-500">*</span>
-                            </label>
-                            <input type="number" name="harga" value="{{ old('harga') }}" min="0" placeholder="0"
-                                class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                required/>
-                            @error('harga')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-on-surface mb-1.5">
-                                Stok <span class="text-red-500">*</span>
-                            </label>
-                            <input type="number" name="stok" value="{{ old('stok') }}" min="0" placeholder="0"
-                                class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                required/>
-                            @error('stok')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
                     </div>
                 </div>
 
@@ -185,7 +172,7 @@ tailwind.config = {
                     </a>
                     <button type="submit"
                         class="flex-1 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:opacity-90 transition-all shadow-[0px_2px_4px_rgba(0,0,0,0.1)]">
-                        Simpan Paket
+                        Simpan Perubahan
                     </button>
                 </div>
             </form>

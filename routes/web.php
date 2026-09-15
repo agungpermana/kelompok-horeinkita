@@ -8,18 +8,26 @@ use App\Http\Controllers\Admin\SurveyController;
 use App\Http\Controllers\AdminWarungController;
 use App\Http\Controllers\AdminDonaturController;
 use App\Http\Controllers\DataPenerimaanController;
+<<<<<<< HEAD
 use App\Http\Controllers\WarungKatalogController;
+=======
+use App\Http\Controllers\KatalogPaketController;
+>>>>>>> 58cec3b3ed6b7d63450e3048c98226f593e42f8d
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    if (auth()->user()->role === 'admin') {
+    $role = auth()->user()->role;
+    if ($role === 'admin') {
         return redirect()->route('admin.dashboard');
     }
+    if ($role === 'warung') {
+        return redirect()->route('warung.dashboard');
+    }
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -32,6 +40,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
 Route::middleware(['auth', 'verified'])->prefix('warung')->name('warung.')->group(function () {
     Route::resource('katalog', WarungKatalogController::class);
+});
+
+// Route pemilik warung
+Route::middleware(['auth'])->group(function () {
+    Route::get('/warung/dashboard', function () {
+        return view('warung.dashboard');
+    })->name('warung.dashboard');
+
+    Route::resource('katalog-paket', KatalogPaketController::class);
 });
 
 Route::middleware('auth')->group(function () {

@@ -32,13 +32,22 @@ class AdminWarungController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        User::create([
-            'username' => $request->username,
+        $user = User::create([
+            'name'         => $request->name,
+            'username'     => $request->username,
             'nama_lengkap' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-            'role' => 'warung',
-            'nomor_hp' => $request->nomor_hp,
+            'email'        => $request->email,
+            'password'     => $request->password,
+            'role'         => 'warung',
+            'nomor_hp'     => $request->nomor_hp,
+        ]);
+
+        // Otomatis buat entry di data_warung
+        \App\Models\DataWarung::create([
+            'id_user'      => $user->id,
+            'nama_warung'  => $request->name . "'s Warung",
+            'lokasi_rw'    => '-',
+            'alamat_warung'=> '-',
         ]);
 
         return redirect()
