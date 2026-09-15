@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminWarungController;
 use App\Http\Controllers\AdminDonaturController;
 use App\Http\Controllers\DataPenerimaanController;
 use App\Http\Controllers\KatalogPaketController;
+use App\Http\Controllers\BuktiPenyerahanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,6 +43,12 @@ Route::middleware(['auth'])->group(function () {
     })->name('warung.dashboard');
 
     Route::resource('katalog-paket', KatalogPaketController::class);
+
+    // Bukti Penyerahan + Riwayat Penyaluran
+    Route::resource('bukti-penyerahan', BuktiPenyerahanController::class)
+         ->only(['index', 'create', 'store', 'show']);
+    Route::post('bukti-penyerahan/{id}/riwayat', [BuktiPenyerahanController::class, 'tambahRiwayat'])
+         ->name('bukti-penyerahan.riwayat.store');
 });
 
 Route::middleware('auth')->group(function () {

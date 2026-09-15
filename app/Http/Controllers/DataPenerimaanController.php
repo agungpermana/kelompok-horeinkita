@@ -67,7 +67,7 @@ class DataPenerimaanController extends Controller
         ]);
 
         data_penerima::create([
-            'id_user'         => $user->id,
+            'id_user'         => $user->id_user,
             'id_survey'       => $request->id_survey,
             'lokasi_rw'       => $request->lokasi_rw,
             'alamat_penerima' => $request->alamat_penerima,

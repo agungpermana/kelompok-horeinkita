@@ -76,6 +76,12 @@ tailwind.config = {
             <span class="material-symbols-outlined text-xl">inventory_2</span>
             <span class="text-sm">Katalog Sembako</span>
         </a>
+
+        <a href="{{ route('bukti-penyerahan.index') }}"
+           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
+            <span class="material-symbols-outlined text-xl">assignment_turned_in</span>
+            <span class="text-sm">Bukti Penyerahan</span>
+        </a>
     </nav>
 
     <div class="mt-auto flex flex-col gap-1 border-t border-outline-variant pt-4">
