@@ -165,7 +165,7 @@ Tambah Akun
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->email ?? '-' }}</td>
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $akun->nomor_hp }}</td>
 <td class="px-stack-lg py-stack-md">
-<form action="{{ route('admin.warung.destroy', $akun->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
+<form action="{{ route('admin.warung.destroy', $akun->id_user) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
 @csrf
 @method('DELETE')
 <button type="submit" class="px-4 py-2 bg-error/10 text-error font-label-md text-label-md rounded-lg hover:bg-error/20 transition-colors inline-flex items-center gap-1">

@@ -17,7 +17,7 @@ return new class extends Migration
 
             // Foreign Keys
             $table->foreignId('id_donatur')
-                  ->constrained('data_user', 'id')
+                  ->constrained('data_user', 'id_user')
                   ->onDelete('cascade');
 
             $table->foreignId('id_penerima')

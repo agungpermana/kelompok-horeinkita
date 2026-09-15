@@ -88,7 +88,7 @@ class DataPenerimaanController extends Controller
         $penerima = data_penerima::findOrFail($id);
 
         $request->validate([
-            'username'        => 'required|string|max:50|unique:data_user,username,' . $penerima->id_user . ',id',
+            'username'        => 'required|string|max:50|unique:data_user,username,' . $penerima->id_user . ',id_user',
             'name'            => 'required|string|max:255',
             'email'           => 'nullable|email|max:255',
             'nomor_hp'        => 'required|string|max:20',
