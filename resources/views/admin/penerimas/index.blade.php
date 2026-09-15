@@ -188,7 +188,11 @@ Tambah Penerima
 <thead class="bg-surface-container-low">
 <tr>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama User</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Username</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Email</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No. HP</th>
+<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Role</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Survey</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">RW</th>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Alamat</th>
@@ -199,7 +203,16 @@ Tambah Penerima
 @forelse($penerimas as $index => $penerima)
 <tr class="hover:bg-surface-container-low/50 transition-colors">
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $index + 1 }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $penerima->user->username ?? '-' }}</td>
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $penerima->user->nama_lengkap ?? '-' }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $penerima->user->email ?? '-' }}</td>
+<td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $penerima->user->nomor_hp ?? '-' }}</td>
+<td class="px-stack-lg py-stack-md">
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm rounded-full">
+<span class="material-symbols-outlined text-sm">assignment_ind</span>
+Penerima Bantuan
+</span>
+</td>
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $penerima->survey->nama_subjek ?? '-' }}</td>
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $penerima->lokasi_rw ?? '-' }}</td>
 <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">{{ $penerima->alamat_penerima ?? '-' }}</td>
@@ -222,7 +235,7 @@ Hapus
 </tr>
 @empty
 <tr>
-<td colspan="6" class="px-stack-lg py-stack-xl text-center font-body-sm text-on-surface-variant">
+<td colspan="10" class="px-stack-lg py-stack-xl text-center font-body-sm text-on-surface-variant">
 Belum ada data Penerima Bantuan.
 </td>
 </tr>
