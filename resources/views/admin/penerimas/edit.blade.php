@@ -113,50 +113,7 @@
 </head>
 <body class="bg-surface font-body-md text-on-surface flex min-h-screen">
 
-<aside class="hidden md:flex bg-surface-container-lowest border-r border-outline-variant w-64 fixed left-0 top-0 h-screen flex-col p-4 gap-stack-md z-40">
-<div class="flex items-center gap-3 mb-8 px-2">
-<div class="w-12 h-12 flex items-center justify-center"><img alt="Wapen Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6sYXVPmNzgf5Du1I8-03CSe678E-MU1byR_JSGezDcsfVHFfR_mEhBTegt7PvzNTbRZ-UNEbIqILSJVsh0JVPAr2wpEXas4jT1xVH2JG1DA6jsxYAWMdKqRhXaanDK9YOvfCVwZbSSaudQk9KYwpAHYz-gRoHDQGKo9cf2kAw5Bht-m5udkupqUcb_PKDcDaK6xJ0aEp_OPNCB-dnmeyK_0G1DdN0CWqheVL4XtoONZyxwlO0nju_tzvf63OzDBc5sMA"/></div>
-<div>
-<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface">Wapen</h1>
-<p class="font-label-sm text-label-sm text-on-surface-variant">Warung Penyalur</p>
-</div>
-</div>
-<nav class="flex-1 flex flex-col gap-2">
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="{{ route('admin.dashboard') }}">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-label-md text-label-md">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="{{ route('admin.survey.index') }}">
-<span class="material-symbols-outlined">description</span>
-<span class="font-label-md text-label-md">Data Survey</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="{{ route('admin.warung.index') }}">
-<span class="material-symbols-outlined">storefront</span>
-<span class="font-label-md text-label-md">Pemilik Warung</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary-container text-on-secondary-container font-bold transition-all shadow-[0px_2px_4px_rgba(0,0,0,0.05)]" href="{{ route('admin.penerimas.index') }}">
-<span class="material-symbols-outlined" data-weight="fill">assignment_ind</span>
-<span class="font-label-md text-label-md">Penerima Bantuan</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
-<span class="material-symbols-outlined">volunteer_activism</span>
-<span class="font-label-md text-label-md">Donatur</span>
-</a>
-</nav>
-<div class="mt-auto flex flex-col gap-2 border-t border-outline-variant pt-4">
-<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all" href="#">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-label-md text-label-md">Pengaturan</span>
-</a>
-<form method="POST" action="{{ route('logout') }}">
-@csrf
-<button type="submit" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
-<span class="material-symbols-outlined">logout</span>
-<span class="font-label-md text-label-md">Keluar</span>
-</button>
-</form>
-</div>
-</aside>
+@include('admin.partials.sidebar', ['active' => 'penerimas'])
 
 <main class="flex-1 ml-0 md:ml-64 bg-background min-h-screen">
 <header class="sticky top-0 z-30 bg-surface/90 backdrop-blur-sm border-b border-outline-variant px-margin-mobile md:px-margin-desktop py-4 flex items-center justify-between">
@@ -226,34 +183,11 @@
 <section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
 <h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Keamanan</h2>
 <div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="password">Password <span class="text-on-surface-variant/60 normal-case">(opsional, kosongkan jika tidak diubah)</span></label>
+<label class="font-label-md text-label-md text-on-surface-variant" for="password">Password <span class="text-on-surface-variant/60 normal-case"></span></label>
 <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="password" name="password" type="password"/>
 @error('password')
 <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
 @enderror
-</div>
-</section>
-
-<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Spesifikasi Penerimaan</h2>
-<div class="space-y-stack-md">
-<div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="id_survey">Data Survey (Opsional)</label>
-<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface" id="id_survey" name="id_survey">
-<option value="">-- Tanpa Survey --</option>
-@foreach($surveys as $survey)
-<option value="{{ $survey->id_survey }}" {{ $penerima->id_survey == $survey->id_survey ? 'selected' : '' }}>{{ $survey->nama_subjek }}</option>
-@endforeach
-</select>
-</div>
-<div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="lokasi_rw">Lokasi RW</label>
-<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface placeholder:text-on-surface-variant/50" id="lokasi_rw" name="lokasi_rw" type="text" maxlength="10" value="{{ old('lokasi_rw', $penerima->lokasi_rw) }}" placeholder="Contoh: RW 05"/>
-</div>
-<div class="flex flex-col gap-2">
-<label class="font-label-md text-label-md text-on-surface-variant" for="alamat_penerima">Alamat Lengkap Penerima</label>
-<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface resize-y" id="alamat_penerima" name="alamat_penerima" rows="4" placeholder="Masukkan alamat lengkap penerima">{{ old('alamat_penerima', $penerima->alamat_penerima) }}</textarea>
-</div>
 </div>
 </section>
 
