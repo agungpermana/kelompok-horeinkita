@@ -2,14 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\HandlesTableSorting;
 use App\Models\katalog_paket as KatalogPaket;
 use Illuminate\Http\Request;
 
 class KatalogPaketController extends Controller
 {
+    use HandlesTableSorting;
+
     public function index()
     {
-        $paket = KatalogPaket::with('warung')->get();
+        [$sort, $direction] = $this->sortQuery(
+            ['warung', 'nama_paket', 'deskripsi', 'harga', 'stok'],
+            'created_at'
+        );
+
+        $sortColumns = [
+            'warung'     => 'data_warung.nama_warung',
+            'nama_paket' => 'katalog_paket.nama_paket',
+            'deskripsi'  => 'katalog_paket.deskripsi',
+            'harga'      => 'katalog_paket.harga',
+            'stok'       => 'katalog_paket.stok',
+            'created_at' => 'katalog_paket.created_at',
+        ];
+
+        $paket = KatalogPaket::with('warung')
+            ->leftJoin('data_warung', 'katalog_paket.id_warung', '=', 'data_warung.id_warung')
+            ->select('katalog_paket.*')
+            ->orderBy($sortColumns[$sort] ?? 'katalog_paket.created_at', $direction)
+            ->get();
 
         return view('katalog_paket.index', compact('paket'));
     }

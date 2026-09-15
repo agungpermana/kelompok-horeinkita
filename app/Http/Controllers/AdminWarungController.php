@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\HandlesTableSorting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AdminWarungController extends Controller
 {
+    use HandlesTableSorting;
+
     public function index()
     {
+        [$sort, $direction] = $this->sortQuery(
+            ['username', 'nama_lengkap', 'email', 'nomor_hp'],
+            'created_at'
+        );
+
         $warung = User::where('role', 'warung')
-            ->orderBy('created_at', 'desc')
+            ->orderBy($sort, $direction)
             ->get();
 
         return view('admin.warung.index', compact('warung'));

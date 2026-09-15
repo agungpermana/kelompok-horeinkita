@@ -36,10 +36,10 @@ Tambah Paket
 <thead class="bg-surface-container-low">
 <tr>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama Paket</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Deskripsi</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Harga</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Stok</th>
+@include('partials.sortable-th', ['sort' => 'nama_paket', 'label' => 'Nama Paket'])
+@include('partials.sortable-th', ['sort' => 'deskripsi', 'label' => 'Deskripsi'])
+@include('partials.sortable-th', ['sort' => 'harga', 'label' => 'Harga'])
+@include('partials.sortable-th', ['sort' => 'stok', 'label' => 'Stok'])
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Aksi</th>
 </tr>
 </thead>
@@ -85,6 +85,7 @@ Belum ada paket di Katalog Sembako.
 </table>
 </div>
 </section>
+@include('partials.column-manager', ['key' => 'warung-katalog'])
 </div>
 </main>
 

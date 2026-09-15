@@ -145,13 +145,13 @@ Tambah Penerima
 <thead class="bg-surface-container-low">
 <tr>
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Username</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Nama</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Email</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">No. HP</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Survey</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">RW</th>
-<th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Alamat</th>
+@include('partials.sortable-th', ['sort' => 'username', 'label' => 'Username'])
+@include('partials.sortable-th', ['sort' => 'nama', 'label' => 'Nama'])
+@include('partials.sortable-th', ['sort' => 'email', 'label' => 'Email'])
+@include('partials.sortable-th', ['sort' => 'nomor_hp', 'label' => 'No. HP'])
+@include('partials.sortable-th', ['sort' => 'survey', 'label' => 'Survey'])
+@include('partials.sortable-th', ['sort' => 'lokasi_rw', 'label' => 'RW'])
+@include('partials.sortable-th', ['sort' => 'alamat', 'label' => 'Alamat'])
 <th class="px-stack-lg py-stack-md text-left font-label-md text-label-md text-on-surface-variant">Aksi</th>
 </tr>
 </thead>
@@ -194,6 +194,7 @@ Belum ada data Penerima Bantuan.
 </table>
 </div>
 </section>
+@include('partials.column-manager', ['key' => 'penerimas'])
 </div>
 </main>
 
