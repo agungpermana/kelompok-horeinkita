@@ -7,23 +7,37 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SurveyController;
 use App\Http\Controllers\AdminWarungController;
 use App\Http\Controllers\DataPenerimaanController;
+use App\Http\Controllers\KatalogPaketController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    if (auth()->user()->role === 'admin') {
+    $role = auth()->user()->role;
+    if ($role === 'admin') {
         return redirect()->route('admin.dashboard');
     }
+    if ($role === 'warung') {
+        return redirect()->route('warung.dashboard');
+    }
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('warung', AdminWarungController::class);
     Route::resource('penerimas', DataPenerimaanController::class);
     Route::resource('survey', SurveyController::class);
+});
+
+// Route pemilik warung
+Route::middleware(['auth'])->group(function () {
+    Route::get('/warung/dashboard', function () {
+        return view('warung.dashboard');
+    })->name('warung.dashboard');
+
+    Route::resource('katalog-paket', KatalogPaketController::class);
 });
 
 Route::middleware('auth')->group(function () {

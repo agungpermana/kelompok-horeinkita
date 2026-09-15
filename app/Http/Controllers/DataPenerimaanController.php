@@ -35,6 +35,7 @@ class DataPenerimaanController extends Controller
         ]);
 
         $user = User::create([
+            'name'         => $request->name,
             'username'     => $request->username,
             'nama_lengkap' => $request->name,
             'email'        => $request->email,
@@ -44,7 +45,7 @@ class DataPenerimaanController extends Controller
         ]);
 
         data_penerima::create([
-            'id_user'         => $user->id_user,
+            'id_user'         => $user->id,
             'id_survey'       => $request->id_survey,
             'lokasi_rw'       => $request->lokasi_rw,
             'alamat_penerima' => $request->alamat_penerima,
@@ -68,7 +69,7 @@ class DataPenerimaanController extends Controller
         $penerima = data_penerima::findOrFail($id);
 
         $request->validate([
-            'username'        => 'required|string|max:50|unique:data_user,username,' . $penerima->id_user . ',id_user',
+            'username'        => 'required|string|max:50|unique:data_user,username,' . $penerima->id_user . ',id',
             'name'            => 'required|string|max:255',
             'email'           => 'nullable|email|max:255',
             'nomor_hp'        => 'required|string|max:20',
