@@ -4,6 +4,26 @@
 @section('active_menu', 'survey')
 @section('page_title', 'Data Survey')
 
+@section('header_actions')
+    <div class="flex items-center gap-2">
+        <a href="{{ route('admin.survey.export', ['format' => 'excel']) }}"
+            class="px-4 py-2 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-xl">table_chart</span>
+            Export Excel
+        </a>
+        <a href="{{ route('admin.survey.export', ['format' => 'csv']) }}"
+            class="px-4 py-2 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-xl">file_download</span>
+            Export CSV
+        </a>
+        <a href="{{ route('admin.survey.create') }}"
+            class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-xl">add</span>
+            Input Survey
+        </a>
+    </div>
+@endsection
+
 @section('content')
     @if (session('success'))
         <div

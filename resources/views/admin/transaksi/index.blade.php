@@ -4,6 +4,21 @@
 @section('active_menu', 'transaksi')
 @section('page_title', 'Riwayat Transaksi')
 
+@section('header_actions')
+    <div class="flex items-center gap-2">
+        <a href="{{ route('admin.transaksi.export', ['format' => 'excel']) }}"
+            class="px-4 py-2 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-xl">table_chart</span>
+            Export Excel
+        </a>
+        <a href="{{ route('admin.transaksi.export', ['format' => 'csv']) }}"
+            class="px-4 py-2 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-xl">file_download</span>
+            Export CSV
+        </a>
+    </div>
+@endsection
+
 @section('content')
     @if (session('success'))
         <div

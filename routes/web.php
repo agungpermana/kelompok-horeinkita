@@ -37,6 +37,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('donatur', [AdminDonaturController::class, 'index'])->name('donatur.index');
     Route::delete('donatur/{id}', [AdminDonaturController::class, 'destroy'])->name('donatur.destroy');
     Route::get('transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('transaksi/export', [TransaksiController::class, 'export'])->name('transaksi.export');
     Route::get('penyaluran', [PenyaluranController::class, 'index'])->name('penyaluran.index');
 });
 

@@ -2,7 +2,9 @@
 
 @section('title', 'Input Hasil Survey - Admin Wapen')
 @section('active_menu', 'survey')
-@section('page_title', '{{ isset($survey) ? 'Edit Hasil Survey Lapangan' : 'Input Hasil Survey Lapangan' }}')
+@section('page_title')
+    {{ isset($survey) ? 'Edit Hasil Survey Lapangan' : 'Input Hasil Survey Lapangan' }}
+@endsection
 
 @section('content')
     @if ($errors->any())
@@ -37,12 +39,12 @@
                         class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
                         id="jenis_survey" name="jenis_survey" required>
                         <option value="">Pilih Kategori</option>
-                        <option value="Sembako"
-                            {{ old('jenis_survey', $survey->jenis_survey ?? null) === 'Sembako' ? 'selected' : '' }}>
-                            Sembako</option>
-                        <option value="Peralatan"
-                            {{ old('jenis_survey', $survey->jenis_survey ?? null) === 'Peralatan' ? 'selected' : '' }}>
-                            Peralatan</option>
+                        <option value="Penerima"
+                            {{ old('jenis_survey', $survey->jenis_survey ?? null) === 'Penerima' ? 'selected' : '' }}>
+                            Penerima</option>
+                        <option value="Warung"
+                            {{ old('jenis_survey', $survey->jenis_survey ?? null) === 'Warung' ? 'selected' : '' }}>
+                            Warung</option>
                     </select>
                     @error('jenis_survey')
                         <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>

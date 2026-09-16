@@ -21,7 +21,7 @@
             <span class="font-label-md text-label-md">Input Survey</span>
         </a>
         <a class="flex items-center gap-3 px-4 py-3 rounded-lg {{ $active === 'katalog' ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[0px_2px_4px_rgba(0,0,0,0.05)]' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all"
-            href="{{ route('warung.katalog.index') }}">
+            >
             <span class="material-symbols-outlined"
                 {{ $active === 'katalog' ? 'data-weight=fill' : '' }}>shopping_basket</span>
             <span class="font-label-md text-label-md">Katalog Sembako</span>
