@@ -1,94 +1,16 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Tambah Bukti Penyerahan - Wapen</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                "secondary-container": "#a9acfd",
-                "primary": "#0800b5",
-                "on-secondary-container": "#3a3d86",
-                "background": "#f8f9ff",
-                "on-surface": "#0b1c30",
-                "surface": "#f8f9ff",
-                "surface-container": "#e5eeff",
-                "outline": "#767588",
-                "on-surface-variant": "#454556",
-                "outline-variant": "#c6c4d9",
-                "surface-container-low": "#eff4ff",
-                "surface-container-lowest": "#ffffff",
-            },
-            fontFamily: { "sans": ["Inter", "sans-serif"] },
-        }
-    }
-}
-</script>
-<style>
-.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-.material-symbols-outlined[data-weight="fill"] { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-</style>
-</head>
-<body class="bg-background font-sans text-on-surface flex min-h-screen">
+@extends('layouts.warung')
 
-{{-- SIDEBAR --}}
-<aside class="hidden md:flex bg-surface-container-lowest border-r border-outline-variant w-64 fixed left-0 top-0 h-screen flex-col p-4 z-40">
-    <div class="flex items-center gap-3 mb-8 px-2">
-        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <span class="material-symbols-outlined text-white text-xl" data-weight="fill">storefront</span>
-        </div>
-        <div>
-            <h1 class="text-base font-bold text-on-surface">Wapen</h1>
-            <p class="text-xs text-on-surface-variant">Warung Penyalur</p>
-        </div>
-    </div>
-    <nav class="flex-1 flex flex-col gap-1">
-        <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest px-4 mb-2">Menu</p>
-        <a href="{{ route('warung.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
-            <span class="material-symbols-outlined text-xl">dashboard</span>
-            <span class="text-sm">Dashboard</span>
-        </a>
-        <a href="{{ route('katalog-paket.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
-            <span class="material-symbols-outlined text-xl">inventory_2</span>
-            <span class="text-sm">Katalog Sembako</span>
-        </a>
-        <a href="{{ route('bukti-penyerahan.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-semibold transition-all">
-            <span class="material-symbols-outlined text-xl" data-weight="fill">assignment_turned_in</span>
-            <span class="text-sm">Bukti Penyerahan</span>
-        </a>
-    </nav>
-    <div class="mt-auto flex flex-col gap-1 border-t border-outline-variant pt-4">
-        <div class="flex items-center gap-3 px-4 py-2 rounded-lg">
-            <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
-            <div>
-                <p class="text-sm font-semibold text-on-surface truncate">{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}</p>
-                <p class="text-xs text-on-surface-variant">Pemilik Warung</p>
-            </div>
-        </div>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
-                <span class="material-symbols-outlined">logout</span>
-                <span class="text-sm">Keluar</span>
-            </button>
-        </form>
-    </div>
-</aside>
+@section('title', 'Tambah Bukti Penyerahan - Wapen Warung')
+@section('active_menu', 'bukti_penyerahan')
+@section('page_title', 'Tambah Bukti Penyerahan')
 
-{{-- MAIN --}}
-<main class="flex-1 ml-0 md:ml-64 bg-background min-h-screen">
-    <header class="sticky top-0 z-30 bg-surface/90 backdrop-blur-sm border-b border-outline-variant px-6 md:px-10 py-4 flex items-center gap-4">
-        <a href="{{ route('bukti-penyerahan.index') }}" class="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-surface-container transition-all text-on-surface-variant">
-            <span class="material-symbols-outlined text-xl">arrow_back</span>
-        </a>
-        <h1 class="text-xl font-semibold text-on-surface">Tambah Bukti Penyerahan</h1>
-    </header>
+@section('header_back_button')
+<a href="{{ route('bukti-penyerahan.index') }}" class="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-surface-container transition-all text-on-surface-variant">
+    <span class="material-symbols-outlined text-xl">arrow_back</span>
+</a>
+@endsection
+
+@section('content')
 
     <div class="p-6 md:p-10 max-w-2xl mx-auto">
 
@@ -204,7 +126,4 @@ tailwind.config = {
             </form>
         </div>
     </div>
-</main>
-
-</body>
-</html>
+@endsection
