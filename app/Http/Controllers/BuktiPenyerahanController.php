@@ -52,8 +52,8 @@ class BuktiPenyerahanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_kupon'           => 'required|exists:kupon_digital,id_kupon',
-            'foto_bukti_url'     => 'nullable|string|max:255',
+            'id_kupon'           => 'nullable|exists:kupon_digital,id_kupon',
+            'foto_bukti'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'catatan_penyerahan' => 'nullable|string',
             'tanggal_penyerahan' => 'required|date',
             'status_penyaluran'  => 'required|string|max:50',
@@ -62,10 +62,16 @@ class BuktiPenyerahanController extends Controller
 
         $warung = DataWarung::where('id_user', auth()->user()->id_user)->firstOrFail();
 
+        // Handle upload foto
+        $fotoPath = null;
+        if ($request->hasFile('foto_bukti') && $request->file('foto_bukti')->isValid()) {
+            $fotoPath = $request->file('foto_bukti')->store('bukti_penyerahan', 'public');
+        }
+
         $bukti = bukti_penyerahan::create([
-            'id_kupon'           => $request->id_kupon,
+            'id_kupon'           => $request->id_kupon ?: null,
             'id_warung'          => $warung->id_warung,
-            'foto_bukti_url'     => $request->foto_bukti_url,
+            'foto_bukti_url'     => $fotoPath,
             'catatan_penyerahan' => $request->catatan_penyerahan,
             'tanggal_penyerahan' => $request->tanggal_penyerahan,
         ]);

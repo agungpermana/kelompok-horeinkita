@@ -48,7 +48,7 @@
         <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_2px_4px_rgba(0,0,0,0.05)] p-6">
             <h3 class="text-base font-semibold text-on-surface mb-4">Aksi Cepat</h3>
             <div class="flex flex-wrap gap-3">
-                <a 
+                <a href="{{ route('katalog-paket.index') }}"
                    class="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-outline-variant text-on-surface text-sm font-semibold hover:bg-surface-container-low transition-all">
                     <span class="material-symbols-outlined text-base">list</span>
                     Lihat Semua Katalog
