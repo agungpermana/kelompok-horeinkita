@@ -60,13 +60,14 @@
     </nav>
 
     <div class="mt-auto flex flex-col gap-2 border-t border-outline-variant pt-4">
-        <div class="flex items-center gap-3 px-4 py-2 rounded-lg">
-            <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+        <a href="{{ route('warung.akun.edit') }}"
+           class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-surface-container-low transition-all {{ ($active ?? '') === 'akun' ? 'bg-secondary-container text-on-secondary-container font-semibold' : 'text-on-surface-variant' }}">
+            <span class="material-symbols-outlined" {{ ($active ?? '') === 'akun' ? 'data-weight=fill' : '' }}>account_circle</span>
             <div>
                 <p class="text-sm font-semibold text-on-surface truncate">{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}</p>
                 <p class="text-xs text-on-surface-variant">Pemilik Warung</p>
             </div>
-        </div>
+        </a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"

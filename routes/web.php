@@ -17,6 +17,7 @@ use App\Http\Controllers\Donatur\DashboardController as DonaturDashboardControll
 use App\Http\Controllers\WarungProfilController;
 use App\Http\Controllers\WarungPenerimaController;
 use App\Http\Controllers\WarungDetailPesananController;
+use App\Http\Controllers\WarungAkunController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -73,6 +74,11 @@ Route::middleware(['auth'])->group(function () {
     // Detail Pesanan (read-only untuk pemilik warung)
     Route::get('/warung/detail-pesanan', [WarungDetailPesananController::class, 'index'])->name('warung.detail-pesanan.index');
     Route::get('/warung/detail-pesanan/{id}', [WarungDetailPesananController::class, 'show'])->name('warung.detail-pesanan.show');
+
+    // Akun & Profil pemilik warung
+    Route::get('/warung/akun', [WarungAkunController::class, 'edit'])->name('warung.akun.edit');
+    Route::patch('/warung/akun', [WarungAkunController::class, 'update'])->name('warung.akun.update');
+    Route::patch('/warung/akun/password', [WarungAkunController::class, 'updatePassword'])->name('warung.akun.password');
 });
 
 // Route penerima bantuan
