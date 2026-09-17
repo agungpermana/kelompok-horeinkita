@@ -56,7 +56,7 @@
                     <input
                         class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
                         id="tanggal_survey" name="tanggal_survey" type="date"
-                        value="{{ old('tanggal_survey', $survey->tanggal_survey ?? null) }}" />
+                        value="{{ old('tanggal_survey', $survey->tanggal_survey ?? now()->format('Y-m-d')) }}" />
                     @error('tanggal_survey')
                         <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                     @enderror
@@ -105,10 +105,12 @@
                     <div class="flex flex-col gap-2">
                         <label class="font-label-md text-label-md text-on-surface-variant"
                             for="nomor_telepon">No. Handphone</label>
-                        <input
-                            class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface placeholder:text-on-surface-variant/50"
-                            id="nomor_telepon" name="nomor_telepon" type="tel" placeholder="0812..."
-                            value="{{ old('nomor_telepon', $survey->nomor_telepon ?? null) }}" />
+<input
+                        class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface placeholder:text-on-surface-variant/50"
+                        id="nomor_telepon" name="nomor_telepon" type="tel" inputmode="numeric"
+                        placeholder="0812..." maxlength="13"
+                        oninput="this.value = this.value.replace(/\D/g, '').slice(0, 13)"
+                        value="{{ old('nomor_telepon', $survey->nomor_telepon ?? null) }}" />
                         @error('nomor_telepon')
                             <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                         @enderror

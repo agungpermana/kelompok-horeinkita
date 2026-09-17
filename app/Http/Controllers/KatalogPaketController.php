@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Concerns\HandlesTableSorting;
+use App\Models\DataWarung;
 use App\Models\katalog_paket as KatalogPaket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +12,15 @@ class KatalogPaketController extends Controller
 {
     use HandlesTableSorting;
 
+    private function myWarung()
+    {
+        return DataWarung::where('id_user', auth()->user()->id_user)->first();
+    }
+
     public function index()
     {
+        $myWarung = $this->myWarung();
+
         [$sort, $direction] = $this->sortQuery(
             ['warung', 'nama_paket', 'deskripsi', 'harga', 'stok'],
             'created_at'
@@ -30,21 +38,41 @@ class KatalogPaketController extends Controller
         $paket = KatalogPaket::with('warung')
             ->leftJoin('data_warung', 'katalog_paket.id_warung', '=', 'data_warung.id_warung')
             ->select('katalog_paket.*')
+            ->when($myWarung, function ($query) use ($myWarung) {
+                $query->where('katalog_paket.id_warung', $myWarung->id_warung);
+            }, function ($query) {
+                $query->whereRaw('1 = 0');
+            })
             ->orderBy($sortColumns[$sort] ?? 'katalog_paket.created_at', $direction)
             ->get();
 
-        return view('katalog_paket.index', compact('paket'));
+        return view('katalog_paket.index', compact('paket', 'myWarung'));
     }
 
     public function create()
     {
-        return view('katalog_paket.create');
+        $myWarung = $this->myWarung();
+
+        if (! $myWarung) {
+            return redirect()
+                ->route('katalog-paket.index')
+                ->with('error', 'Akun Anda belum terhubung dengan warung mana pun.');
+        }
+
+        return view('katalog_paket.create', compact('myWarung'));
     }
 
     public function store(Request $request)
     {
+        $myWarung = $this->myWarung();
+
+        if (! $myWarung) {
+            return redirect()
+                ->route('katalog-paket.index')
+                ->with('error', 'Akun Anda belum terhubung dengan warung mana pun.');
+        }
+
         $request->validate([
-            'id_warung'    => 'required|exists:data_warung,id_warung',
             'nama_paket'   => 'required|string|max:255',
             'deskripsi'    => 'nullable|string',
             'harga'        => 'required|numeric|min:0',
@@ -58,7 +86,7 @@ class KatalogPaketController extends Controller
         }
 
         KatalogPaket::create([
-            'id_warung'    => $request->id_warung,
+            'id_warung'    => $myWarung->id_warung,
             'nama_paket'   => $request->nama_paket,
             'deskripsi'    => $request->deskripsi,
             'harga'        => $request->harga,
@@ -74,12 +102,23 @@ class KatalogPaketController extends Controller
     public function edit($id)
     {
         $paket = KatalogPaket::findOrFail($id);
+        $myWarung = $this->myWarung();
+
+        if (! $myWarung || $paket->id_warung !== $myWarung->id_warung) {
+            abort(403, 'Anda tidak berhak mengelola paket ini.');
+        }
+
         return view('katalog_paket.edit', compact('paket'));
     }
 
     public function update(Request $request, $id)
     {
         $paket = KatalogPaket::findOrFail($id);
+        $myWarung = $this->myWarung();
+
+        if (! $myWarung || $paket->id_warung !== $myWarung->id_warung) {
+            abort(403, 'Anda tidak berhak mengelola paket ini.');
+        }
 
         $request->validate([
             'nama_paket'   => 'required|string|max:255',
@@ -114,6 +153,11 @@ class KatalogPaketController extends Controller
     public function destroy($id)
     {
         $paket = KatalogPaket::findOrFail($id);
+        $myWarung = $this->myWarung();
+
+        if (! $myWarung || $paket->id_warung !== $myWarung->id_warung) {
+            abort(403, 'Anda tidak berhak mengelola paket ini.');
+        }
 
         // Hapus gambar jika ada
         if ($paket->gambar_paket) {

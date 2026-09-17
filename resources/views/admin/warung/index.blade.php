@@ -62,16 +62,23 @@
                             <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">
                                 {{ $akun->nomor_hp }}</td>
                             <td class="px-stack-lg py-stack-md">
-                                <form action="{{ route('admin.warung.destroy', $akun->id_user) }}" method="POST"
-                                    onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="px-4 py-2 bg-error/10 text-error font-label-md text-label-md rounded-lg hover:bg-error/20 transition-colors inline-flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-lg">delete</span>
-                                        Hapus
-                                    </button>
-                                </form>
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ route('admin.warung.edit', $akun->id_user) }}"
+                                        class="px-4 py-2 bg-primary/10 text-primary font-label-md text-label-md rounded-lg hover:bg-primary/20 transition-colors inline-flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-lg">edit</span>
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('admin.warung.destroy', $akun->id_user) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin menghapus akun ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-error/10 text-error font-label-md text-label-md rounded-lg hover:bg-error/20 transition-colors inline-flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-lg">delete</span>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

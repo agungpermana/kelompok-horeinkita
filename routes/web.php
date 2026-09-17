@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
     // Detail Pesanan (read-only untuk pemilik warung)
     Route::get('/warung/detail-pesanan', [WarungDetailPesananController::class, 'index'])->name('warung.detail-pesanan.index');
     Route::get('/warung/detail-pesanan/{id}', [WarungDetailPesananController::class, 'show'])->name('warung.detail-pesanan.show');
+    Route::post('/warung/detail-pesanan/{id}/terima', [WarungDetailPesananController::class, 'terima'])->name('warung.detail-pesanan.terima');
+    Route::post('/warung/detail-pesanan/{id}/tolak', [WarungDetailPesananController::class, 'tolak'])->name('warung.detail-pesanan.tolak');
 });
 
 // Route penerima bantuan
@@ -83,6 +85,12 @@ Route::middleware(['auth'])->prefix('penerima')->name('penerima.')->group(functi
 // Route donatur
 Route::middleware(['auth'])->prefix('donatur')->name('donatur.')->group(function () {
     Route::get('/dashboard', [DonaturDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/konfigurasi/{id}', [DonaturDashboardController::class, 'konfigurasi'])->name('konfigurasi');
+    Route::post('/pembayaran/proses', [DonaturDashboardController::class, 'prosesKonfigurasi'])->name('pembayaran.proses');
+    Route::get('/pembayaran', [DonaturDashboardController::class, 'pembayaran'])->name('pembayaran');
+    Route::post('/pembayaran/bayar', [DonaturDashboardController::class, 'bayar'])->name('bayar');
+    Route::get('/riwayat', [DonaturDashboardController::class, 'riwayat'])->name('riwayat');
+    Route::post('/riwayat/{id}/batalkan', [DonaturDashboardController::class, 'batalkan'])->name('riwayat.batalkan');
 });
 
 Route::middleware('auth')->group(function () {

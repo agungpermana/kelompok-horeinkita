@@ -14,6 +14,13 @@
 @section('content')
 <div class="max-w-2xl space-y-5">
 
+    @if (session('success'))
+    <div class="bg-secondary-container text-on-secondary-container rounded-xl p-4 flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined">check_circle</span>
+        <p class="text-sm font-semibold">{{ session('success') }}</p>
+    </div>
+    @endif
+
     {{-- Status & ID --}}
     <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6">
         <div class="flex items-center justify-between mb-4">
@@ -28,9 +35,14 @@
                     'gagal' => 'bg-red-100 text-red-700',
                     default => 'bg-yellow-100 text-yellow-700',
                 };
+                $label  = match($status) {
+                    'lunas' => 'Diterima',
+                    'gagal' => 'Ditolak',
+                    default => 'Menunggu Persetujuan',
+                };
             @endphp
             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {{ $color }}">
-                {{ ucfirst($status) }}
+                {{ $label }}
             </span>
         </div>
         <div class="grid grid-cols-2 gap-4">
@@ -130,6 +142,55 @@
             <p class="text-sm text-on-surface-variant">Data penerima tidak ditemukan.</p>
         @endif
     </div>
+
+    @if ($status === 'pending')
+        {{-- Aksi Persetujuan --}}
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6">
+            <h2 class="text-sm font-bold text-on-surface mb-1 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl" data-weight="fill">fact_check</span>
+                Konfirmasi Pesanan
+            </h2>
+            <p class="text-xs text-on-surface-variant mb-4">Terima pesanan untuk memproses penyaluran dan menerbitkan kupon donasi, atau tolak jika tidak dapat diproses.</p>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <form method="POST" action="{{ route('warung.detail-pesanan.terima', $pesanan->id_transaksi) }}" class="flex-1"
+                    onsubmit="return confirm('Terima pesanan #{{ $pesanan->id_transaksi }}?');">
+                    @csrf
+                    <button type="submit"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary text-white text-sm font-bold hover:opacity-90 transition-all">
+                        <span class="material-symbols-outlined" data-weight="fill">check_circle</span>
+                        Terima
+                    </button>
+                </form>
+                <form method="POST" action="{{ route('warung.detail-pesanan.tolak', $pesanan->id_transaksi) }}" class="flex-1"
+                    onsubmit="return confirm('Tolak pesanan #{{ $pesanan->id_transaksi }}?');">
+                    @csrf
+                    <button type="submit"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-error text-error text-sm font-bold hover:bg-error-container transition-all">
+                        <span class="material-symbols-outlined">close</span>
+                        Tolak
+                    </button>
+                </form>
+            </div>
+        </div>
+    @elseif ($status === 'lunas' && $pesanan->kupon)
+        {{-- Kupon Digital --}}
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6">
+            <h2 class="text-sm font-bold text-on-surface mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl" data-weight="fill">confirmation_number</span>
+                Kupon Digital
+            </h2>
+            <div class="flex items-center justify-between gap-4 border border-dashed border-outline-variant rounded-xl p-4 bg-surface-container-low">
+                <div>
+                    <p class="text-xs text-on-surface-variant mb-1">Kode Kupon</p>
+                    <p class="text-lg font-bold tracking-widest text-primary">{{ $pesanan->kupon->kode_kupon }}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-on-surface-variant mb-1">Berlaku Hingga</p>
+                    <p class="text-sm font-semibold">{{ $pesanan->kupon->tanggal_kadaluarsa ? \Carbon\Carbon::parse($pesanan->kupon->tanggal_kadaluarsa)->translatedFormat('d M Y') : '-' }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
 
 </div>
 @endsection

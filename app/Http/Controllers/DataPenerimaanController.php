@@ -7,6 +7,7 @@ use App\Models\data_penerima;
 use App\Models\DataSurvey;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DataPenerimaanController extends Controller
 {
@@ -42,18 +43,30 @@ class DataPenerimaanController extends Controller
 
     public function create()
     {
-        $surveys = DataSurvey::all();
+        $surveys = DataSurvey::where('jenis_survey', 'Penerima')
+            ->where('status_kelayakan', 'lolos')
+            ->whereDoesntHave('data_penerima')
+            ->orderByDesc('created_at')
+            ->get();
+
         return view('admin.penerimas.create', compact('surveys'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|max:50|unique:data_user,username',
-            'name'     => 'required|string|max:255',
-            'email'    => 'nullable|email|max:255',
-            'nomor_hp' => 'required|string|max:20',
-            'password' => 'required|string|min:6',
+            'username'        => 'required|string|max:50|unique:data_user,username',
+            'name'            => 'required|string|max:255',
+            'email'           => 'nullable|email|max:255',
+            'nomor_hp'        => 'required|string|max:20',
+            'password'        => 'required|string|min:6',
+            'id_survey'       => [
+                'nullable',
+                'exists:data_survey,id_survey',
+                Rule::unique('data_penerima', 'id_survey'),
+            ],
+            'lokasi_rw'       => 'nullable|string|max:10',
+            'alamat_penerima' => 'nullable|string',
         ]);
 
         $user = User::create([
@@ -96,7 +109,11 @@ class DataPenerimaanController extends Controller
             'email'           => 'nullable|email|max:255',
             'nomor_hp'        => 'required|string|max:20',
             'password'        => 'nullable|string|min:6',
-            'id_survey'       => 'nullable|exists:data_survey,id_survey',
+            'id_survey'       => [
+                'nullable',
+                'exists:data_survey,id_survey',
+                Rule::unique('data_penerima', 'id_survey')->ignore($penerima->id_penerima),
+            ],
             'lokasi_rw'       => 'nullable|string|max:10',
             'alamat_penerima' => 'nullable|string',
         ]);

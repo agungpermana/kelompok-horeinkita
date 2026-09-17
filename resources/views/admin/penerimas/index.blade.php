@@ -55,7 +55,7 @@
                             <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">
                                 {{ $penerima->user->nomor_hp ?? '-' }}</td>
                             <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">
-                                {{ $penerima->survey->nama_subjek ?? '-' }}</td>
+                                {{ $penerima->survey->jenis_survey ?? '-' }}</td>
                             <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">
                                 {{ $penerima->lokasi_rw ?? '-' }}</td>
                             <td class="px-stack-lg py-stack-md font-body-sm text-on-surface">

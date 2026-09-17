@@ -60,13 +60,6 @@
     </nav>
 
     <div class="mt-auto flex flex-col gap-2 border-t border-outline-variant pt-4">
-        <div class="flex items-center gap-3 px-4 py-2 rounded-lg">
-            <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
-            <div>
-                <p class="text-sm font-semibold text-on-surface truncate">{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}</p>
-                <p class="text-xs text-on-surface-variant">Pemilik Warung</p>
-            </div>
-        </div>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"

@@ -88,9 +88,15 @@
                                     <span class="font-label-sm text-label-sm text-on-surface">{{ $item->warung?->nama_warung ?? 'Warung Mitra' }}</span>
                                 </div>
                                 <span class="absolute top-4 right-4 bg-on-surface text-surface font-label-sm text-[10px] uppercase px-2 py-1 rounded-full z-10">PAKET</span>
-                                <div class="w-full h-full rounded-lg bg-surface-container-high border-2 border-dashed border-outline-variant flex items-center justify-center relative overflow-hidden">
-                                    <span class="font-label-md text-label-md text-on-surface-variant z-10 uppercase tracking-widest opacity-50">PAKET #{{ $item->id_paket }}</span>
-                                </div>
+                                @if ($item->gambar_paket)
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($item->gambar_paket) }}"
+                                        alt="{{ $item->nama_paket }}"
+                                        class="w-full h-full object-cover rounded-lg"/>
+                                @else
+                                    <div class="w-full h-full rounded-lg bg-surface-container-high border-2 border-dashed border-outline-variant flex items-center justify-center relative overflow-hidden">
+                                        <span class="font-label-md text-label-md text-on-surface-variant z-10 uppercase tracking-widest opacity-50">PAKET #{{ $item->id_paket }}</span>
+                                    </div>
+                                @endif
                             </div>
                             <div class="p-6 flex flex-col flex-grow gap-3">
                                 <div>
@@ -105,9 +111,10 @@
                                     <span class="material-symbols-outlined text-[16px]">location_on</span>
                                     <span class="font-body-sm text-[12px]">{{ $item->warung?->alamat_warung ?: 'Lokasi Warung' }}</span>
                                 </div>
-                                <button class="w-full bg-primary-container text-on-primary rounded-xl py-3 font-label-md text-label-md uppercase tracking-wider hover:bg-primary transition-colors focus:ring-4 focus:ring-primary-container/30">
+                                <a href="{{ route('donatur.konfigurasi', $item->id_paket) }}"
+                                    class="w-full block text-center bg-primary-container text-on-primary rounded-xl py-3 font-label-md text-label-md uppercase tracking-wider hover:bg-primary transition-colors focus:ring-4 focus:ring-primary-container/30">
                                     PILIH PAKET
-                                </button>
+                                </a>
                             </div>
                         </div>
                     @endforeach

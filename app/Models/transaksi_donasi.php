@@ -34,4 +34,9 @@ class transaksi_donasi extends Model
     {
         return $this->belongsTo(katalog_paket::class, 'id_paket', 'id_paket');
     }
+
+    public function kupon()
+    {
+        return $this->hasOne(kupon_digital::class, 'id_transaksi', 'id_transaksi');
+    }
 }

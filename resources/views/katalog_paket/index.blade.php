@@ -4,13 +4,13 @@
 @section('active_menu', 'katalog')
 @section('page_title', 'Katalog Sembako')
 
-@section('header_actions')
+{{-- @section('header_actions')
 <button onclick="bukaModalTambah()"
    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
     <span class="material-symbols-outlined text-base">add</span>
     Tambah Paket
 </button>
-@endsection
+@endsection --}}
 
 @section('content')
 
@@ -18,6 +18,13 @@
     <div class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 rounded-xl px-4 py-3 font-body-sm text-body-sm">
         <span class="material-symbols-outlined text-green-600 text-xl">check_circle</span>
         {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 rounded-xl px-4 py-3 font-body-sm text-body-sm">
+        <span class="material-symbols-outlined text-red-600 text-xl">error</span>
+        {{ session('error') }}
     </div>
 @endif
 
@@ -64,7 +71,7 @@
                     <td class="px-4 py-4">
                         <div class="flex items-center justify-end gap-2">
                             <button type="button"
-                                onclick="bukaModalEdit({{ $item->id_paket }}, '{{ addslashes($item->nama_paket) }}', '{{ addslashes($item->deskripsi) }}', {{ $item->harga }}, {{ $item->stok }})"
+                                onclick="bukaModalEdit({{ $item->id_paket }}, '{{ addslashes($item->nama_paket) }}', '{{ addslashes($item->deskripsi) }}', {{ (int) $item->harga }}, {{ $item->stok }})"
                                 class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-label-sm text-label-sm transition-all">
                                 <span class="material-symbols-outlined text-sm">edit</span>
                                 Edit
@@ -105,28 +112,22 @@
 
 @push('scripts')
 {{-- ======================== MODAL TAMBAH ======================== --}}
-<div id="modal-tambah" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+<div id="modal-tambah" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto hidden">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="tutupModal('modal-tambah')"></div>
-    <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md z-10">
+    <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md z-10 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant">
             <h2 class="text-base font-bold text-on-surface">Tambah Paket Sembako</h2>
             <button onclick="tutupModal('modal-tambah')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container text-on-surface-variant transition-all">
                 <span class="material-symbols-outlined text-xl">close</span>
             </button>
         </div>
-        <form action="{{ route('katalog-paket.store') }}" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
+        <form action="{{ route('katalog-paket.store') }}" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4" onsubmit="siapkanHarga(this)">
             @csrf
             <div>
                 <label class="block text-sm font-semibold text-on-surface mb-1.5">Warung <span class="text-red-500">*</span></label>
-                <select name="id_warung" required
-                    class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                    <option value="">-- Pilih Warung --</option>
-                    @foreach(\App\Models\DataWarung::all() as $warung)
-                        <option value="{{ $warung->id_warung }}" {{ old('id_warung') == $warung->id_warung ? 'selected' : '' }}>
-                            {{ $warung->nama_warung }}
-                        </option>
-                    @endforeach
-                </select>
+                <input type="text" value="{{ $myWarung?->nama_warung ?? '-' }}" readonly
+                    class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-surface-container-low focus:outline-none transition-all"/>
+                <input type="hidden" name="id_warung" value="{{ $myWarung?->id_warung }}"/>
                 @error('id_warung') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
             <div>
@@ -146,7 +147,8 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold text-on-surface mb-1.5">Harga (Rp) <span class="text-red-500">*</span></label>
-                    <input type="number" name="harga" value="{{ old('harga') }}" min="0" placeholder="0"
+                    <input type="text" id="harga-tambah" name="harga" value="{{ old('harga') }}" inputmode="numeric" placeholder="Rp 0"
+                        oninput="formatHarga(this)"
                         class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         required/>
                     @error('harga') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -201,7 +203,7 @@
                 <span class="material-symbols-outlined text-xl">close</span>
             </button>
         </div>
-        <form id="form-edit" action="" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
+        <form id="form-edit" action="" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4" onsubmit="siapkanHarga(this)">
             @csrf
             @method('PUT')
             <div>
@@ -218,7 +220,8 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold text-on-surface mb-1.5">Harga (Rp) <span class="text-red-500">*</span></label>
-                    <input type="number" id="edit-harga" name="harga" min="0"
+                    <input type="text" id="edit-harga" name="harga" inputmode="numeric" placeholder="Rp 0"
+                        oninput="formatHarga(this)"
                         class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         required/>
                 </div>
@@ -266,6 +269,20 @@
 </div>
 
 <script>
+function rupiahFormatted(nilai) {
+    const angka = String(nilai ?? '').replace(/\D/g, '');
+    return angka === '' ? '' : 'Rp ' + parseInt(angka, 10).toLocaleString('id-ID');
+}
+function formatHarga(input) {
+    input.value = rupiahFormatted(input.value);
+}
+function siapkanHarga(form) {
+    const harga = form.querySelector('[name="harga"]');
+    if (harga) {
+        harga.value = harga.value.replace(/\D/g, '');
+    }
+    return true;
+}
 function bukaModalTambah() {
     document.getElementById('modal-tambah').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -274,7 +291,7 @@ function bukaModalEdit(id, nama, deskripsi, harga, stok, gambar) {
     document.getElementById('form-edit').action = '/katalog-paket/' + id;
     document.getElementById('edit-nama').value = nama;
     document.getElementById('edit-deskripsi').value = deskripsi;
-    document.getElementById('edit-harga').value = harga;
+    document.getElementById('edit-harga').value = rupiahFormatted(harga);
     document.getElementById('edit-stok').value = stok;
     // Tampilkan gambar lama jika ada
     const imgLama = document.getElementById('edit-gambar-lama');
@@ -319,7 +336,11 @@ document.addEventListener('keydown', e => {
     }
 });
 @if($errors->any() && !old('_method'))
-    document.addEventListener('DOMContentLoaded', () => bukaModalTambah());
+    document.addEventListener('DOMContentLoaded', () => {
+        const hargaTambah = document.getElementById('harga-tambah');
+        if (hargaTambah.value !== '') formatHarga(hargaTambah);
+        bukaModalTambah();
+    });
 @endif
 </script>
 @endpush

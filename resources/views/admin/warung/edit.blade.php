@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Pemilik Warung - Admin Wapen')
+@section('title', 'Edit Pemilik Warung - Admin Wapen')
 @section('active_menu', 'warung')
-@section('page_title', 'Tambah Akun Pemilik Warung')
+@section('page_title', 'Edit Akun Pemilik Warung')
 
 @section('content')
     @if ($errors->any())
@@ -17,47 +17,9 @@
         </div>
     @endif
 
-    <form class="space-y-stack-xl" action="{{ route('admin.warung.store') }}" method="POST">
+    <form class="space-y-stack-xl" action="{{ route('admin.warung.update', $warung->id_user) }}" method="POST">
         @csrf
-
-        <section
-            class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-            <h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Pilih dari Hasil Survey</h2>
-            <p class="font-body-sm text-body-sm text-on-surface-variant mb-stack-md">
-                Pilih hasil survey yang lolos kelayakan. Data nama warung, nomor HP, dan alamat akan terisi otomatis dari survey.
-            </p>
-            @if ($surveys->count() > 0)
-                <div class="flex flex-col gap-2">
-                    <label class="font-label-md text-label-md text-on-surface-variant" for="survey-select">Hasil Survey</label>
-                    <select
-                        class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                        id="survey-select" name="id_survey">
-                        <option value="">-- Pilih Survey --</option>
-                        @foreach ($surveys as $survey)
-                            <option value="{{ $survey->id_survey }}"
-                                data-nama="{{ $survey->nama_subjek }}"
-                                data-nomor-hp="{{ $survey->nomor_telepon }}"
-                                data-lokasi-rw="{{ $survey->lokasi_rw }}"
-                                data-alamat="{{ $survey->alamat_lengkap }}"
-                                @if ((string) old('id_survey') === (string) $survey->id_survey) selected @endif>
-                                {{ $survey->nama_subjek }} (RW {{ $survey->lokasi_rw }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('id_survey')
-                        <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-            @else
-                <div class="flex items-start gap-3 p-4 rounded-xl border border-dashed border-outline-variant bg-surface-container-low/50">
-                    <span class="material-symbols-outlined text-on-surface-variant shrink-0">info</span>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">
-                        Belum ada hasil survey <b>Warung</b> yang lolos kelayakan atau belum digunakan untuk akun.
-                        Tambahkan survey dengan kategori <b>Warung</b> terlebih dahulu agar data akun terisi otomatis.
-                    </p>
-                </div>
-            @endif
-        </section>
+        @method('PUT')
 
         <section
             class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
@@ -67,7 +29,7 @@
                     <label class="font-label-md text-label-md text-on-surface-variant" for="username">Username</label>
                     <input
                         class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                        id="username" name="username" type="text" value="{{ old('username') }}" required />
+                        id="username" name="username" type="text" value="{{ old('username', $warung->username) }}" required />
                     @error('username')
                         <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                     @enderror
@@ -77,7 +39,7 @@
                         Pemilik Warung</label>
                     <input
                         class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                        id="name" name="name" type="text" value="{{ old('name') }}" required />
+                        id="name" name="name" type="text" value="{{ old('name', $warung->name) }}" required />
                     @error('name')
                         <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                     @enderror
@@ -87,7 +49,7 @@
                         <label class="font-label-md text-label-md text-on-surface-variant" for="email">Email</label>
                         <input
                             class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                            id="email" name="email" type="email" value="{{ old('email') }}" />
+                            id="email" name="email" type="email" value="{{ old('email', $warung->email) }}" />
                         @error('email')
                             <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                         @enderror
@@ -97,7 +59,7 @@
                             HP</label>
                         <input
                             class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                            id="nomor_hp" name="nomor_hp" type="text" value="{{ old('nomor_hp') }}" required />
+                            id="nomor_hp" name="nomor_hp" type="text" value="{{ old('nomor_hp', $warung->nomor_hp) }}" required />
                         @error('nomor_hp')
                             <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                         @enderror
@@ -110,10 +72,10 @@
             class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
             <h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Keamanan</h2>
             <div class="flex flex-col gap-2">
-                <label class="font-label-md text-label-md text-on-surface-variant" for="password">Password</label>
+                <label class="font-label-md text-label-md text-on-surface-variant" for="password">Password Baru</label>
                 <input
                     class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                    id="password" name="password" type="password" required />
+                    id="password" name="password" type="password" placeholder="Kosongkan jika tidak ingin mengubah" />
                 @error('password')
                     <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                 @enderror
@@ -128,7 +90,7 @@
                     <label class="font-label-md text-label-md text-on-surface-variant" for="nama_warung">Nama Warung</label>
                     <input
                         class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                        id="nama_warung" name="nama_warung" type="text" value="{{ old('nama_warung') }}" />
+                        id="nama_warung" name="nama_warung" type="text" value="{{ old('nama_warung', $profil->nama_warung ?? null) }}" />
                     @error('nama_warung')
                         <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                     @enderror
@@ -137,7 +99,7 @@
                     <label class="font-label-md text-label-md text-on-surface-variant" for="lokasi_rw">Lokasi RW</label>
                     <input
                         class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface"
-                        id="lokasi_rw" name="lokasi_rw" type="text" value="{{ old('lokasi_rw') }}" />
+                        id="lokasi_rw" name="lokasi_rw" type="text" value="{{ old('lokasi_rw', $profil->lokasi_rw ?? null) }}" />
                     @error('lokasi_rw')
                         <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                     @enderror
@@ -146,7 +108,7 @@
                     <label class="font-label-md text-label-md text-on-surface-variant" for="alamat_warung">Alamat Warung</label>
                     <textarea
                         class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm text-on-surface resize-none"
-                        id="alamat_warung" name="alamat_warung" rows="3">{{ old('alamat_warung') }}</textarea>
+                        id="alamat_warung" name="alamat_warung" rows="3">{{ old('alamat_warung', $profil->alamat_warung ?? null) }}</textarea>
                     @error('alamat_warung')
                         <span class="text-error font-label-sm text-label-sm mt-1">{{ $message }}</span>
                     @enderror
@@ -154,43 +116,16 @@
             </div>
         </section>
 
-        <div class="pt-4 pb-8 flex justify-center">
+        <div class="pt-4 pb-8 flex justify-center gap-4">
+            <a href="{{ route('admin.warung.index') }}"
+                class="w-full md:w-auto px-12 py-4 bg-surface-container-low text-on-surface-variant font-headline-sm text-headline-sm rounded-xl shadow-[0px_10px_20px_rgba(13,13,91,0.08)] hover:bg-surface-container transition-all text-center">
+                Batal
+            </a>
             <button
                 class="w-full md:w-auto px-12 py-4 bg-primary text-on-primary font-headline-sm text-headline-sm rounded-xl shadow-[0px_10px_20px_rgba(13,13,91,0.08)] hover:bg-primary-container hover:text-on-primary-container transition-all transform active:scale-[0.98]"
                 type="submit">
-                Simpan Akun
+                Simpan Perubahan
             </button>
         </div>
     </form>
 @endsection
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const select = document.getElementById('survey-select');
-            if (!select) return;
-
-            const fields = {
-                name: 'data-nama',
-                nama_warung: 'data-nama',
-                nomor_hp: 'data-nomor-hp',
-                lokasi_rw: 'data-lokasi-rw',
-                alamat_warung: 'data-alamat',
-            };
-
-            function applySurvey() {
-                const opt = select.options[select.selectedIndex];
-                const hasSurvey = select.value !== '';
-
-                Object.keys(fields).forEach(function (id) {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    el.value = hasSurvey ? (opt.getAttribute(fields[id]) || '') : '';
-                });
-            }
-
-            select.addEventListener('change', applySurvey);
-            applySurvey();
-        });
-    </script>
-@endpush

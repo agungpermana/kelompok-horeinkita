@@ -19,7 +19,7 @@
             <span class="font-label-md text-label-md">Dashboard</span>
         </a>
         <a class="flex items-center gap-3 px-4 py-3 rounded-lg {{ ($active ?? '') === 'riwayat' ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[0px_2px_4px_rgba(0,0,0,0.05)]' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all"
-            href="#">
+            href="{{ route('donatur.riwayat') }}">
             <span class="material-symbols-outlined"
                 @if (($active ?? '') === 'riwayat') data-weight="fill" @endif>receipt_long</span>
             <span class="font-label-md text-label-md">Riwayat Transaksi</span>

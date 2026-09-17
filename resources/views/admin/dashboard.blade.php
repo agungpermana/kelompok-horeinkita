@@ -127,7 +127,12 @@
 </header>
 
 <div class="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto space-y-stack-xl">
+<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
 <p class="font-body-md text-on-surface-variant">Selamat datang di sistem Warung Penyalur (Wapen).</p>
+<hr class="border-outline-variant/40 my-stack-lg">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Panel Administrasi</h2>
+<p class="font-body-md text-on-surface-variant">Admin dapat mengelola akun pengguna yang terlibat dalam sistem Wapen, termasuk Pemilik Warung, Penerima Bantuan, dan Donatur.</p>
+</section>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
 <div class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
@@ -152,11 +157,6 @@
 <div class="font-headline-lg text-headline-lg text-tertiary">{{ $jumlahDonatur }}</div>
 </div>
 </div>
-
-<section class="bg-surface-container-lowest rounded-xl p-stack-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30">
-<h2 class="font-headline-sm text-headline-sm text-on-surface mb-stack-md">Panel Administrasi</h2>
-<p class="font-body-md text-on-surface-variant">Admin dapat mengelola akun pengguna yang terlibat dalam sistem Wapen, termasuk Pemilik Warung, Penerima Bantuan, dan Donatur.</p>
-</section>
 
 @php
 $chartTotal = $statusBerhasil + $statusPending + $statusGagal + $statusDibatalkan;

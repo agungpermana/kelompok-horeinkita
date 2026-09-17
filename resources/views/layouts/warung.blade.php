@@ -166,6 +166,13 @@
                 <h1 class="font-headline-md text-headline-md text-on-surface">@yield('page_title', 'Dashboard')</h1>
             </div>
             @yield('header_actions')
+            <div class="flex items-center gap-3 px-4 py-2 rounded-lg">
+                <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+                <div>
+                    <p class="text-sm font-semibold text-on-surface truncate">{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}</p>
+                    <p class="text-xs text-on-surface-variant">Pemilik Warung</p>
+                </div>
+            </div>
         </header>
 
         <div class="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto space-y-stack-xl">

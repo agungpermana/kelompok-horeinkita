@@ -107,25 +107,16 @@ tailwind.config = {
         @endif
 
         <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_2px_4px_rgba(0,0,0,0.05)] p-6">
-            <form action="{{ route('katalog-paket.store') }}" method="POST" class="space-y-5">
+            <form action="{{ route('katalog-paket.store') }}" method="POST" class="space-y-5" onsubmit="siapkanHarga(this)">
                 @csrf
 
                 <div>
                     <label class="block text-sm font-semibold text-on-surface mb-1.5">
                         Warung <span class="text-red-500">*</span>
                     </label>
-                    <select name="id_warung" required
-                        class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                        <option value="">-- Pilih Warung --</option>
-                        @foreach(\App\Models\DataWarung::all() as $warung)
-                            <option value="{{ $warung->id_warung }}" {{ old('id_warung') == $warung->id_warung ? 'selected' : '' }}>
-                                {{ $warung->nama_warung }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('id_warung')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                    <input type="text" value="{{ $myWarung->nama_warung }}" readonly
+                        class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-surface-container-low focus:outline-none transition-all"/>
+                    <input type="hidden" name="id_warung" value="{{ $myWarung->id_warung }}"/>
                 </div>
 
                 <div class="border-t border-outline-variant/40 pt-5">
@@ -157,7 +148,8 @@ tailwind.config = {
                             <label class="block text-sm font-semibold text-on-surface mb-1.5">
                                 Harga (Rp) <span class="text-red-500">*</span>
                             </label>
-                            <input type="number" name="harga" value="{{ old('harga') }}" min="0" placeholder="0"
+                            <input type="text" name="harga" value="{{ old('harga') }}" inputmode="numeric" placeholder="Rp 0"
+                                oninput="formatHarga(this)"
                                 class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                                 required/>
                             @error('harga')
@@ -192,6 +184,30 @@ tailwind.config = {
         </div>
     </div>
 </main>
+
+<script>
+    function rupiahFormatted(nilai) {
+        const angka = String(nilai ?? '').replace(/\D/g, '');
+        return angka === '' ? '' : 'Rp ' + parseInt(angka, 10).toLocaleString('id-ID');
+    }
+    function formatHarga(input) {
+        input.value = rupiahFormatted(input.value);
+    }
+    function siapkanHarga(form) {
+        const harga = form.querySelector('[name="harga"]');
+        if (harga) {
+            harga.value = harga.value.replace(/\D/g, '');
+        }
+        return true;
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[name="harga"]').forEach(function (input) {
+            if (input.value !== '') {
+                formatHarga(input);
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
