@@ -4,6 +4,16 @@
 @section('active_menu', 'penerimas')
 @section('page_title', 'Data Penerima Bantuan')
 
+@section('header_actions')
+    <div>
+        <a href="{{ route('admin.penerimas.create') }}"
+            class="px-6 py-2 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-[0px_2px_4px_rgba(0,0,0,0.05)] hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-xl">add</span>
+            Tambah Akun
+        </a>
+    </div>
+@endsection
+
 @section('content')
     @if (session('success'))
         <div

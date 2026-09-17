@@ -31,7 +31,7 @@ class DataPenerimaanController extends Controller
         ];
 
         $penerimas = data_penerima::with(['user', 'survey'])
-            ->leftJoin('data_user', 'data_penerima.id_user', '=', 'data_user.id')
+            ->leftJoin('data_user', 'data_penerima.id_user', '=', 'data_user.id_user')
             ->leftJoin('data_survey', 'data_penerima.id_survey', '=', 'data_survey.id_survey')
             ->select('data_penerima.*')
             ->orderBy($sortColumns[$sort] ?? 'data_penerima.created_at', $direction)

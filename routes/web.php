@@ -12,6 +12,8 @@ use App\Http\Controllers\AdminDonaturController;
 use App\Http\Controllers\DataPenerimaanController;
 use App\Http\Controllers\KatalogPaketController;
 use App\Http\Controllers\BuktiPenyerahanController;
+use App\Http\Controllers\Penerima\DashboardController as PenerimaDashboardController;
+use App\Http\Controllers\Donatur\DashboardController as DonaturDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +26,12 @@ Route::get('/dashboard', function () {
     }
     if ($role === 'warung') {
         return redirect()->route('warung.dashboard');
+    }
+    if ($role === 'penerima') {
+        return redirect()->route('penerima.dashboard');
+    }
+    if ($role === 'donatur') {
+        return redirect()->route('donatur.dashboard');
     }
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
@@ -54,6 +62,16 @@ Route::middleware(['auth'])->group(function () {
          ->only(['index', 'create', 'store', 'show']);
     Route::post('bukti-penyerahan/{id}/riwayat', [BuktiPenyerahanController::class, 'tambahRiwayat'])
          ->name('bukti-penyerahan.riwayat.store');
+});
+
+// Route penerima bantuan
+Route::middleware(['auth'])->prefix('penerima')->name('penerima.')->group(function () {
+    Route::get('/dashboard', [PenerimaDashboardController::class, 'index'])->name('dashboard');
+});
+
+// Route donatur
+Route::middleware(['auth'])->prefix('donatur')->name('donatur.')->group(function () {
+    Route::get('/dashboard', [DonaturDashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::middleware('auth')->group(function () {

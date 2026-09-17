@@ -138,7 +138,7 @@ class SurveyController extends Controller
     {
         return $request->validate([
             'nama_subjek'      => 'required|string|max:255',
-            'jenis_survey'     => 'required|in:Sembako,Peralatan',
+            'jenis_survey'     => 'required|in:Penerima,Warung',
             'tanggal_survey'   => 'nullable|date',
             'lokasi_rw'        => 'required|string|max:20',
             'kelurahan'        => 'nullable|string|max:255',
