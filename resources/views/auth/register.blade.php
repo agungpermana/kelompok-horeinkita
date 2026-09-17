@@ -111,14 +111,14 @@
 
                         <div class="form-group">
 
-                            <label for="name">
+                            <label for="nama_lengkap">
                                 Nama Lengkap
                             </label>
 
                             <input
-                                id="name"
-                                name="name"
-                                value="{{ old('name') }}"
+                                id="nama_lengkap"
+                                name="nama_lengkap"
+                                value="{{ old('nama_lengkap') }}"
                                 placeholder="Nama lengkap anda"
                                 type="text"
                                 required
@@ -130,28 +130,39 @@
                             @enderror
 
                         </div>
-
-
                         <div class="form-group">
-
-                            <label for="email">
-                                Username / Email
+                            <label for="username">
+                                Username
                             </label>
-
+                            <input
+                                id="username"
+                                name="username"
+                                value="{{ old('username') }}"
+                                placeholder="Username"
+                                type="username"
+                                required
+                            />
+                            @error('username')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="email">
+                                Email
+                            </label>
                             <input
                                 id="email"
                                 name="email"
                                 value="{{ old('email') }}"
-                                placeholder="Username atau email"
+                                placeholder="email"
                                 type="email"
                                 required
                             />
-
                             @error('email')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
-
                         </div>
+
 
 
                         <div class="form-group">
