@@ -43,7 +43,6 @@
         </div>
     </header>
 
-
     <!-- Main Content -->
     <main class="main-content">
 
@@ -185,26 +184,7 @@
 
                         <div class="login-options">
 
-                            <label class="remember-me">
-
-                                <input
-                                    type="checkbox"
-                                    name="remember"
-                                    id="remember_me"
-                                />
-
-                                <span>
-                                    Ingat Saya
-                                </span>
-
-                            </label>
-
-
-                            @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}" class="forgot-password">
-                                    Lupa sandi?
-                                </a>
-                            @endif
+                            <!-- No forgot password link on registration page -->
 
                         </div>
 
@@ -239,7 +219,6 @@
 
     </main>
 
-
     <!-- Footer -->
     <footer class="footer">
 
@@ -262,8 +241,28 @@
             </div>
 
         </div>
-
     </footer>
+
+    <div id="toast-container" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 hidden items-center gap-3 rounded-md bg-green-100 text-green-800 px-4 py-3 shadow-lg opacity-0 transition-opacity duration-500 ease-in-out">
+        @if (session('status'))
+            <span>{{ session('status') }}</span>
+        @endif
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toast = document.getElementById('toast-container');
+            @if (session('status'))
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('opacity-0');
+                    setTimeout(() => {
+                        toast.classList.add('hidden');
+                    }, 500);
+                }, 3000);
+            @endif
+        });
+    </script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
