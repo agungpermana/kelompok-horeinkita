@@ -12,6 +12,9 @@ use App\Http\Controllers\AdminDonaturController;
 use App\Http\Controllers\DataPenerimaanController;
 use App\Http\Controllers\KatalogPaketController;
 use App\Http\Controllers\BuktiPenyerahanController;
+use App\Http\Controllers\WarungProfilController;
+use App\Http\Controllers\WarungPenerimaController;
+use App\Http\Controllers\WarungDetailPesananController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,6 +56,14 @@ Route::middleware(['auth'])->group(function () {
          ->only(['index', 'create', 'store', 'show']);
     Route::post('bukti-penyerahan/{id}/riwayat', [BuktiPenyerahanController::class, 'tambahRiwayat'])
          ->name('bukti-penyerahan.riwayat.store');
+
+    // Data Penerima (read-only untuk pemilik warung)
+    Route::get('/warung/penerima', [WarungPenerimaController::class, 'index'])->name('warung.penerima.index');
+    Route::get('/warung/penerima/{id}', [WarungPenerimaController::class, 'show'])->name('warung.penerima.show');
+
+    // Detail Pesanan (read-only untuk pemilik warung)
+    Route::get('/warung/detail-pesanan', [WarungDetailPesananController::class, 'index'])->name('warung.detail-pesanan.index');
+    Route::get('/warung/detail-pesanan/{id}', [WarungDetailPesananController::class, 'show'])->name('warung.detail-pesanan.show');
 });
 
 Route::middleware('auth')->group(function () {

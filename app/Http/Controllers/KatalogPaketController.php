@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\HandlesTableSorting;
 use App\Models\katalog_paket as KatalogPaket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class KatalogPaketController extends Controller
 {
@@ -43,19 +44,26 @@ class KatalogPaketController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_warung' => 'required|exists:data_warung,id_warung',
-            'nama_paket' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'harga' => 'required|numeric|min:0',
-            'stok' => 'required|integer|min:0',
+            'id_warung'    => 'required|exists:data_warung,id_warung',
+            'nama_paket'   => 'required|string|max:255',
+            'deskripsi'    => 'nullable|string',
+            'harga'        => 'required|numeric|min:0',
+            'stok'         => 'required|integer|min:0',
+            'gambar_paket' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
+        $gambarPath = null;
+        if ($request->hasFile('gambar_paket') && $request->file('gambar_paket')->isValid()) {
+            $gambarPath = $request->file('gambar_paket')->store('katalog_paket', 'public');
+        }
+
         KatalogPaket::create([
-            'id_warung' => $request->id_warung,
-            'nama_paket' => $request->nama_paket,
-            'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
-            'stok' => $request->stok,
+            'id_warung'    => $request->id_warung,
+            'nama_paket'   => $request->nama_paket,
+            'deskripsi'    => $request->deskripsi,
+            'harga'        => $request->harga,
+            'stok'         => $request->stok,
+            'gambar_paket' => $gambarPath,
         ]);
 
         return redirect()
@@ -66,7 +74,6 @@ class KatalogPaketController extends Controller
     public function edit($id)
     {
         $paket = KatalogPaket::findOrFail($id);
-
         return view('katalog_paket.edit', compact('paket'));
     }
 
@@ -75,17 +82,28 @@ class KatalogPaketController extends Controller
         $paket = KatalogPaket::findOrFail($id);
 
         $request->validate([
-            'nama_paket' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'harga' => 'required|numeric|min:0',
-            'stok' => 'required|integer|min:0',
+            'nama_paket'   => 'required|string|max:255',
+            'deskripsi'    => 'nullable|string',
+            'harga'        => 'required|numeric|min:0',
+            'stok'         => 'required|integer|min:0',
+            'gambar_paket' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
+        $gambarPath = $paket->gambar_paket;
+        if ($request->hasFile('gambar_paket') && $request->file('gambar_paket')->isValid()) {
+            // Hapus gambar lama jika ada
+            if ($gambarPath) {
+                Storage::disk('public')->delete($gambarPath);
+            }
+            $gambarPath = $request->file('gambar_paket')->store('katalog_paket', 'public');
+        }
+
         $paket->update([
-            'nama_paket' => $request->nama_paket,
-            'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
-            'stok' => $request->stok,
+            'nama_paket'   => $request->nama_paket,
+            'deskripsi'    => $request->deskripsi,
+            'harga'        => $request->harga,
+            'stok'         => $request->stok,
+            'gambar_paket' => $gambarPath,
         ]);
 
         return redirect()
@@ -96,6 +114,12 @@ class KatalogPaketController extends Controller
     public function destroy($id)
     {
         $paket = KatalogPaket::findOrFail($id);
+
+        // Hapus gambar jika ada
+        if ($paket->gambar_paket) {
+            Storage::disk('public')->delete($paket->gambar_paket);
+        }
+
         $paket->delete();
 
         return redirect()

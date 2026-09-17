@@ -1,195 +1,109 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Katalog Sembako - Wapen</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                "secondary-container": "#a9acfd",
-                "secondary": "#5457a1",
-                "primary": "#0800b5",
-                "on-secondary-container": "#3a3d86",
-                "background": "#f8f9ff",
-                "on-surface": "#0b1c30",
-                "surface": "#f8f9ff",
-                "surface-container": "#e5eeff",
-                "outline": "#767588",
-                "on-surface-variant": "#454556",
-                "outline-variant": "#c6c4d9",
-                "surface-container-low": "#eff4ff",
-                "surface-container-lowest": "#ffffff",
-                "on-primary": "#ffffff",
-            },
-            fontFamily: { "sans": ["Inter", "sans-serif"] },
-        }
-    }
-}
-</script>
-<style>
-.material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-.material-symbols-outlined[data-weight="fill"] {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-</style>
-</head>
-<body class="bg-background font-sans text-on-surface flex min-h-screen">
+@extends('layouts.warung')
 
-{{-- ======================== SIDEBAR ======================== --}}
-<aside class="hidden md:flex bg-surface-container-lowest border-r border-outline-variant w-64 fixed left-0 top-0 h-screen flex-col p-4 z-40">
-    <div class="flex items-center gap-3 mb-8 px-2">
-        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <span class="material-symbols-outlined text-white text-xl" data-weight="fill">storefront</span>
-        </div>
-        <div>
-            <h1 class="text-base font-bold text-on-surface">Wapen</h1>
-            <p class="text-xs text-on-surface-variant">Warung Penyalur</p>
-        </div>
+@section('title', 'Katalog Sembako - Wapen')
+@section('active_menu', 'katalog')
+@section('page_title', 'Katalog Sembako')
+
+@section('header_actions')
+<button onclick="bukaModalTambah()"
+   class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-label-md text-label-md hover:opacity-90 transition-all shadow-sm">
+    <span class="material-symbols-outlined text-base">add</span>
+    Tambah Paket
+</button>
+@endsection
+
+@section('content')
+
+@if(session('success'))
+    <div class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 rounded-xl px-4 py-3 font-body-sm text-body-sm">
+        <span class="material-symbols-outlined text-green-600 text-xl">check_circle</span>
+        {{ session('success') }}
     </div>
-    <nav class="flex-1 flex flex-col gap-1">
-        <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest px-4 mb-2">Menu</p>
-        <a href="{{ route('warung.dashboard') }}"
-           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
-            <span class="material-symbols-outlined text-xl">dashboard</span>
-            <span class="text-sm">Dashboard</span>
-        </a>
-        <a href="{{ route('katalog-paket.index') }}"
-           class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-semibold transition-all">
-            <span class="material-symbols-outlined text-xl" data-weight="fill">inventory_2</span>
-            <span class="text-sm">Katalog Sembako</span>
-        </a>
-        <a href="{{ route('bukti-penyerahan.index') }}"
-           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
-            <span class="material-symbols-outlined text-xl">assignment_turned_in</span>
-            <span class="text-sm">Bukti Penyerahan</span>
-        </a>
-    </nav>
-    <div class="mt-auto flex flex-col gap-1 border-t border-outline-variant pt-4">
-        <div class="flex items-center gap-3 px-4 py-2 rounded-lg">
-            <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
-            <div>
-                <p class="text-sm font-semibold text-on-surface truncate">{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}</p>
-                <p class="text-xs text-on-surface-variant">Pemilik Warung</p>
-            </div>
-        </div>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-all">
-                <span class="material-symbols-outlined">logout</span>
-                <span class="text-sm">Keluar</span>
-            </button>
-        </form>
+@endif
+
+@if($paket->count() > 0)
+    <div class="bg-surface-container-lowest rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 overflow-hidden">
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-surface-container border-b border-outline-variant">
+                    <th class="text-left px-4 py-3 font-label-md text-label-md text-on-surface-variant w-10">#</th>
+                    <th class="text-left px-4 py-3 font-label-md text-label-md text-on-surface-variant">Nama Paket</th>
+                    <th class="text-left px-4 py-3 font-label-md text-label-md text-on-surface-variant hidden md:table-cell">Warung</th>
+                    <th class="text-left px-4 py-3 font-label-md text-label-md text-on-surface-variant">Harga</th>
+                    <th class="text-left px-4 py-3 font-label-md text-label-md text-on-surface-variant hidden sm:table-cell">Stok</th>
+                    <th class="text-right px-4 py-3 font-label-md text-label-md text-on-surface-variant">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($paket as $i => $item)
+                <tr class="border-b border-outline-variant/40 hover:bg-surface-container-low transition-colors last:border-b-0">
+                    <td class="px-4 py-4 font-body-sm text-body-sm text-on-surface-variant">{{ $i + 1 }}</td>
+                    <td class="px-4 py-4">
+                        <p class="font-label-md text-label-md text-on-surface">{{ $item->nama_paket }}</p>
+                        @if($item->deskripsi)
+                            <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">{{ Str::limit($item->deskripsi, 55) }}</p>
+                        @endif
+                    </td>
+                    <td class="px-4 py-4 font-body-sm text-body-sm text-on-surface-variant hidden md:table-cell">
+                        {{ $item->warung->nama_warung ?? '-' }}
+                    </td>
+                    <td class="px-4 py-4 font-label-md text-label-md text-primary">
+                        Rp {{ number_format($item->harga, 0, ',', '.') }}
+                    </td>
+                    <td class="px-4 py-4 hidden sm:table-cell">
+                        @if($item->stok > 0)
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-700 font-label-sm text-label-sm">
+                                {{ $item->stok }} unit
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-2 py-1 rounded-full bg-red-100 text-red-700 font-label-sm text-label-sm">
+                                Habis
+                            </span>
+                        @endif
+                    </td>
+                    <td class="px-4 py-4">
+                        <div class="flex items-center justify-end gap-2">
+                            <button type="button"
+                                onclick="bukaModalEdit({{ $item->id_paket }}, '{{ addslashes($item->nama_paket) }}', '{{ addslashes($item->deskripsi) }}', {{ $item->harga }}, {{ $item->stok }})"
+                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-label-sm text-label-sm transition-all">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                                Edit
+                            </button>
+                            <form action="{{ route('katalog-paket.destroy', $item->id_paket) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    onclick="return confirm('Yakin ingin menghapus paket ini?')"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 font-label-sm text-label-sm transition-all">
+                                    <span class="material-symbols-outlined text-sm">delete</span>
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-</aside>
-
-{{-- ======================== MAIN ======================== --}}
-<main class="flex-1 ml-0 md:ml-64 bg-background min-h-screen">
-
-    <header class="sticky top-0 z-30 bg-surface/90 backdrop-blur-sm border-b border-outline-variant px-6 md:px-10 py-4 flex items-center justify-between">
-        <h1 class="text-xl font-semibold text-on-surface">Katalog Sembako</h1>
+@else
+    <div class="bg-surface-container-lowest rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col items-center justify-center py-20 gap-4">
+        <span class="material-symbols-outlined text-6xl text-on-surface-variant/40">inventory_2</span>
+        <div class="text-center">
+            <p class="font-headline-sm text-headline-sm text-on-surface">Belum ada paket sembako</p>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Tambahkan paket sembako pertama untuk warung Anda.</p>
+        </div>
         <button onclick="bukaModalTambah()"
-           class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:opacity-90 transition-all shadow-sm">
+           class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-label-md text-label-md hover:opacity-90 transition-all mt-2">
             <span class="material-symbols-outlined text-base">add</span>
             Tambah Paket
         </button>
-    </header>
-
-    <div class="p-6 md:p-10 max-w-5xl mx-auto space-y-5">
-
-        @if(session('success'))
-            <div class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 rounded-xl px-4 py-3 text-sm">
-                <span class="material-symbols-outlined text-green-600 text-xl">check_circle</span>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if($paket->count() > 0)
-            <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="bg-surface-container border-b border-outline-variant">
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-on-surface-variant w-10">#</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-on-surface-variant">Nama Paket</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-on-surface-variant">Harga</th>
-                            <th class="text-left px-4 py-3 text-xs font-semibold text-on-surface-variant hidden sm:table-cell">Stok</th>
-                            <th class="text-right px-4 py-3 text-xs font-semibold text-on-surface-variant">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($paket as $i => $item)
-                        <tr class="border-b border-outline-variant/40 hover:bg-surface-container-low transition-colors last:border-b-0">
-                            <td class="px-4 py-3.5 text-sm text-on-surface-variant">{{ $i + 1 }}</td>
-                            <td class="px-4 py-3.5">
-                                <p class="text-sm font-semibold text-on-surface">{{ $item->nama_paket }}</p>
-                                @if($item->deskripsi)
-                                    <p class="text-xs text-on-surface-variant mt-0.5">{{ Str::limit($item->deskripsi, 55) }}</p>
-                                @endif
-                            </td>
-                            <td class="px-4 py-3.5 text-sm font-semibold text-primary">
-                                Rp {{ number_format($item->harga, 0, ',', '.') }}
-                            </td>
-                            <td class="px-4 py-3.5 hidden sm:table-cell">
-                                @if($item->stok > 0)
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
-                                        {{ $item->stok }} unit
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
-                                        Habis
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center justify-end gap-2">
-                                    {{-- Tombol Edit buka popup --}}
-                                    <button type="button"
-                                        onclick="bukaModalEdit({{ $item->id_paket }}, '{{ addslashes($item->nama_paket) }}', '{{ addslashes($item->deskripsi) }}', {{ $item->harga }}, {{ $item->stok }})"
-                                        class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-xs font-semibold transition-all">
-                                        <span class="material-symbols-outlined text-sm">edit</span>
-                                        Edit
-                                    </button>
-                                    <form action="{{ route('katalog-paket.destroy', $item->id_paket) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            onclick="return confirm('Yakin ingin menghapus paket ini?')"
-                                            class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold transition-all">
-                                            <span class="material-symbols-outlined text-sm">delete</span>
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm flex flex-col items-center justify-center py-20 gap-4">
-                <span class="material-symbols-outlined text-6xl text-on-surface-variant opacity-30">inventory_2</span>
-                <div class="text-center">
-                    <p class="text-lg font-semibold text-on-surface">Belum ada paket sembako</p>
-                    <p class="text-sm text-on-surface-variant mt-1">Klik tombol "Tambah Paket" untuk memulai.</p>
-                </div>
-                <button onclick="bukaModalTambah()"
-                   class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:opacity-90 transition-all mt-2">
-                    <span class="material-symbols-outlined text-base">add</span>
-                    Tambah Paket
-                </button>
-            </div>
-        @endif
     </div>
-</main>
+@endif
 
+@endsection
+
+@push('scripts')
 {{-- ======================== MODAL TAMBAH ======================== --}}
 <div id="modal-tambah" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="tutupModal('modal-tambah')"></div>
@@ -200,7 +114,7 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-xl">close</span>
             </button>
         </div>
-        <form action="{{ route('katalog-paket.store') }}" method="POST" class="px-6 py-5 space-y-4">
+        <form action="{{ route('katalog-paket.store') }}" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
             @csrf
             <div>
                 <label class="block text-sm font-semibold text-on-surface mb-1.5">Warung <span class="text-red-500">*</span></label>
@@ -245,6 +159,24 @@ tailwind.config = {
                     @error('stok') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
+            <div>
+                <label class="block text-sm font-semibold text-on-surface mb-1.5">Gambar Paket</label>
+                <div class="relative">
+                    <input type="file" name="gambar_paket" id="gambar-tambah"
+                        accept="image/jpg,image/jpeg,image/png,image/webp"
+                        class="hidden" onchange="previewGambar(this, 'preview-tambah', 'label-tambah')"/>
+                    <label for="gambar-tambah"
+                        class="flex items-center gap-3 w-full px-3.5 py-2.5 border border-outline-variant border-dashed rounded-lg text-sm text-on-surface-variant bg-white hover:bg-surface-container-low cursor-pointer transition-all">
+                        <span class="material-symbols-outlined text-xl text-primary">add_photo_alternate</span>
+                        <span id="label-tambah">Pilih gambar dari galeri...</span>
+                    </label>
+                </div>
+                <div id="preview-tambah" class="hidden mt-2">
+                    <img id="img-tambah" src="" alt="Preview" class="w-20 h-20 object-cover rounded-lg border border-outline-variant"/>
+                    <button type="button" onclick="hapusGambar('gambar-tambah','preview-tambah','label-tambah','img-tambah')" class="mt-1 text-xs text-red-500 hover:underline block">Hapus</button>
+                </div>
+                <p class="text-xs text-on-surface-variant mt-1">Format: JPG, PNG, WEBP. Maks 5MB.</p>
+            </div>
             <div class="flex gap-3 pt-2">
                 <button type="button" onclick="tutupModal('modal-tambah')"
                     class="flex-1 px-4 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-all">
@@ -269,7 +201,7 @@ tailwind.config = {
                 <span class="material-symbols-outlined text-xl">close</span>
             </button>
         </div>
-        <form id="form-edit" action="" method="POST" class="px-6 py-5 space-y-4">
+        <form id="form-edit" action="" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
             @csrf
             @method('PUT')
             <div>
@@ -297,6 +229,28 @@ tailwind.config = {
                         required/>
                 </div>
             </div>
+            <div>
+                <label class="block text-sm font-semibold text-on-surface mb-1.5">Gambar Paket</label>
+                <div id="edit-gambar-lama" class="hidden mb-2">
+                    <p class="text-xs text-on-surface-variant mb-1">Gambar saat ini:</p>
+                    <img id="img-edit-lama" src="" alt="Gambar" class="w-16 h-16 object-cover rounded-lg border border-outline-variant"/>
+                </div>
+                <div class="relative">
+                    <input type="file" name="gambar_paket" id="gambar-edit"
+                        accept="image/jpg,image/jpeg,image/png,image/webp"
+                        class="hidden" onchange="previewGambar(this, 'preview-edit', 'label-edit')"/>
+                    <label for="gambar-edit"
+                        class="flex items-center gap-3 w-full px-3.5 py-2.5 border border-outline-variant border-dashed rounded-lg text-sm text-on-surface-variant bg-white hover:bg-surface-container-low cursor-pointer transition-all">
+                        <span class="material-symbols-outlined text-xl text-primary">add_photo_alternate</span>
+                        <span id="label-edit">Ganti gambar (opsional)...</span>
+                    </label>
+                </div>
+                <div id="preview-edit" class="hidden mt-2">
+                    <img id="img-edit" src="" alt="Preview" class="w-16 h-16 object-cover rounded-lg border border-outline-variant"/>
+                    <button type="button" onclick="hapusGambar('gambar-edit','preview-edit','label-edit','img-edit')" class="mt-1 text-xs text-red-500 hover:underline block">Hapus pilihan</button>
+                </div>
+                <p class="text-xs text-on-surface-variant mt-1">Kosongkan jika tidak ingin mengganti gambar.</p>
+            </div>
             <div class="flex gap-3 pt-2">
                 <button type="button" onclick="tutupModal('modal-edit')"
                     class="flex-1 px-4 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-all">
@@ -316,37 +270,56 @@ function bukaModalTambah() {
     document.getElementById('modal-tambah').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
-function bukaModalEdit(id, nama, deskripsi, harga, stok) {
-    // Set action form ke route update
+function bukaModalEdit(id, nama, deskripsi, harga, stok, gambar) {
     document.getElementById('form-edit').action = '/katalog-paket/' + id;
-    // Isi nilai form
     document.getElementById('edit-nama').value = nama;
     document.getElementById('edit-deskripsi').value = deskripsi;
     document.getElementById('edit-harga').value = harga;
     document.getElementById('edit-stok').value = stok;
-    // Buka modal
+    // Tampilkan gambar lama jika ada
+    const imgLama = document.getElementById('edit-gambar-lama');
+    if (gambar) {
+        document.getElementById('img-edit-lama').src = '/storage/' + gambar;
+        imgLama.classList.remove('hidden');
+    } else {
+        imgLama.classList.add('hidden');
+    }
+    // Reset preview baru
+    hapusGambar('gambar-edit','preview-edit','label-edit','img-edit');
     document.getElementById('modal-edit').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
 function tutupModal(id) {
     document.getElementById(id).classList.add('hidden');
     document.body.style.overflow = '';
 }
-
+function previewGambar(input, previewId, labelId) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        const imgId = previewId === 'preview-tambah' ? 'img-tambah' : 'img-edit';
+        reader.onload = function(e) {
+            document.getElementById(imgId).src = e.target.result;
+            document.getElementById(previewId).classList.remove('hidden');
+            document.getElementById(labelId).textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+function hapusGambar(inputId, previewId, labelId, imgId) {
+    document.getElementById(inputId).value = '';
+    document.getElementById(previewId).classList.add('hidden');
+    document.getElementById(labelId).textContent = inputId === 'gambar-tambah' ? 'Pilih gambar dari galeri...' : 'Ganti gambar (opsional)...';
+    document.getElementById(imgId).src = '';
+}
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
         tutupModal('modal-tambah');
         tutupModal('modal-edit');
     }
 });
-
-// Buka modal tambah otomatis kalau ada error dari store
 @if($errors->any() && !old('_method'))
     document.addEventListener('DOMContentLoaded', () => bukaModalTambah());
 @endif
 </script>
-
-</body>
-</html>
+@endpush

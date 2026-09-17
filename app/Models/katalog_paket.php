@@ -18,6 +18,7 @@ class katalog_paket extends Model
         'deskripsi',
         'harga',
         'stok',
+        'gambar_paket',
     ];
 
     public function warung()
