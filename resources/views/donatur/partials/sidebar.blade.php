@@ -24,6 +24,18 @@
                 @if (($active ?? '') === 'riwayat') data-weight="fill" @endif>receipt_long</span>
             <span class="font-label-md text-label-md">Riwayat Transaksi</span>
         </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg {{ ($active ?? '') === 'bukti' ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[0px_2px_4px_rgba(0,0,0,0.05)]' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all"
+            href="{{ route('donatur.bukti') }}">
+            <span class="material-symbols-outlined"
+                @if (($active ?? '') === 'bukti') data-weight="fill" @endif>assignment_turned_in</span>
+            <span class="font-label-md text-label-md">Bukti Penyerahan</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg {{ ($active ?? '') === 'penerima' ? 'bg-secondary-container text-on-secondary-container font-bold shadow-[0px_2px_4px_rgba(0,0,0,0.05)]' : 'text-on-surface-variant hover:bg-surface-container-low' }} transition-all"
+            href="{{ route('donatur.penerima') }}">
+            <span class="material-symbols-outlined"
+                @if (($active ?? '') === 'penerima') data-weight="fill" @endif>group</span>
+            <span class="font-label-md text-label-md">Data Penerima</span>
+        </a>
     </nav>
 
     <div class="mt-auto flex flex-col gap-2 border-t border-outline-variant pt-4">

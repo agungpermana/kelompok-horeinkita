@@ -4,127 +4,83 @@
 @section('active_menu', 'bukti_penyerahan')
 @section('page_title', 'Bukti Penyerahan & Riwayat')
 
-@section('header_actions')
-<button onclick="bukaModal()"
-           class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:opacity-90 transition-all shadow-sm">
-            <span class="material-symbols-outlined text-base">add</span>
-            Tambah Bukti
-        </button>
-@endsection
-
 @section('content')
-@if(session('success'))
-            <div class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 rounded-xl px-4 py-3 text-sm">
-                <span class="material-symbols-outlined text-green-600 text-xl">check_circle</span>
-                {{ session('success') }}
-            </div>
-        @endif
+    <div id="alert-success" class="hidden flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 rounded-xl px-4 py-3 text-sm">
+        <span class="material-symbols-outlined text-green-600 text-xl">check_circle</span>
+        <span id="alert-success-text"></span>
+    </div>
 
+    @if(session('success'))
+        <div class="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 rounded-xl px-4 py-3 text-sm">
+            <span class="material-symbols-outlined text-green-600 text-xl">check_circle</span>
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div id="table-container">
         @if($buktis->count() > 0)
-            <div class="space-y-4">
-                @foreach($buktis as $bukti)
-                <details class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden group" {{ $loop->first ? 'open' : '' }}>
-                    <summary class="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-surface-container-low transition-all select-none">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                <span class="material-symbols-outlined text-primary text-xl" data-weight="fill">receipt_long</span>
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold text-on-surface">Kupon #{{ $bukti->id_kupon }}</p>
-                                <p class="text-xs text-on-surface-variant mt-0.5">
-                                    {{ $bukti->tanggal_penyerahan ? $bukti->tanggal_penyerahan->format('d M Y') : '-' }}
-                                    @if($bukti->riwayat->count() > 0)
-                                        &bull;
-                                        @php $statusTerakhir = $bukti->riwayat->first()->status_penyaluran; @endphp
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold
-                                            {{ $statusTerakhir === 'selesai' ? 'bg-green-100 text-green-700' :
-                                               ($statusTerakhir === 'proses' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700') }}">
-                                            {{ ucfirst($statusTerakhir) }}
-                                        </span>
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-outline-variant/40 bg-surface-container text-xs uppercase tracking-wide text-on-surface-variant">
+                                <th class="text-left px-5 py-3 font-semibold">ID</th>
+                                <th class="text-left px-5 py-3 font-semibold">Kupon</th>
+                                <th class="text-left px-5 py-3 font-semibold">Donatur</th>
+                                <th class="text-left px-5 py-3 font-semibold">Penerima</th>
+                                <th class="text-left px-5 py-3 font-semibold">Tanggal Penyerahan</th>
+                                <th class="text-left px-5 py-3 font-semibold">Status</th>
+                                <th class="text-left px-5 py-3 font-semibold">Foto</th>
+                                <th class="text-left px-5 py-3 font-semibold">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($buktis as $bukti)
+                            @php
+                                $transaksi   = $bukti->kupon?->transaksi;
+                                $namaDonatur = $transaksi?->donatur?->nama_lengkap ?? '-';
+                                $namaPenerima = $transaksi?->penerima?->user?->nama_lengkap ?? '-';
+                            @endphp
+                            <tr class="border-b border-outline-variant/20 hover:bg-surface-container-low transition-all">
+                                <td class="px-5 py-3.5 font-semibold text-on-surface">#{{ $bukti->id_bukti }}</td>
+                                <td class="px-5 py-3.5">Kupon #{{ $bukti->id_kupon ?? '-' }}</td>
+                                <td class="px-5 py-3.5">{{ $namaDonatur }}</td>
+                                <td class="px-5 py-3.5">{{ $namaPenerima }}</td>
+                                <td class="px-5 py-3.5">{{ $bukti->tanggal_penyerahan ? $bukti->tanggal_penyerahan->format('d M Y') : '-' }}</td>
+                                <td class="px-5 py-3.5">
+                                    @php $statusTerakhir = $bukti->riwayat->first()->status_penyaluran ?? 'pending'; @endphp
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold
+                                        {{ $statusTerakhir === 'selesai' ? 'bg-green-100 text-green-700' :
+                                           ($statusTerakhir === 'proses' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700') }}">
+                                        {{ ucfirst($statusTerakhir) }}
+                                    </span>
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    @if($bukti->foto_bukti_url)
+                                        <a href="{{ Storage::url($bukti->foto_bukti_url) }}" target="_blank">
+                                            <img src="{{ Storage::url($bukti->foto_bukti_url) }}"
+                                                 alt="Foto Bukti"
+                                                 class="w-12 h-12 rounded-lg border border-outline-variant object-cover hover:opacity-80 transition-all cursor-pointer"/>
+                                        </a>
+                                    @else
+                                        <span class="text-on-surface-variant">-</span>
                                     @endif
-                                </p>
-                            </div>
-                        </div>
-                        <span class="material-symbols-outlined text-on-surface-variant text-xl transition-transform group-open:rotate-180">expand_more</span>
-                    </summary>
-
-                    <div class="border-t border-outline-variant/40 px-5 py-4 space-y-4">
-                        {{-- Info --}}
-                        <div class="bg-surface-container rounded-xl p-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3">
-                                <div>
-                                    <p class="text-xs text-on-surface-variant mb-1">ID Kupon</p>
-                                    <p class="text-sm font-semibold">#{{ $bukti->id_kupon ?? '-' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-on-surface-variant mb-1">Tanggal</p>
-                                    <p class="text-sm font-semibold">{{ $bukti->tanggal_penyerahan ? $bukti->tanggal_penyerahan->format('d M Y') : '-' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-on-surface-variant mb-1">Catatan</p>
-                                    <p class="text-sm">{{ $bukti->catatan_penyerahan ?? '-' }}</p>
-                                </div>
-                            </div>
-                            @if($bukti->foto_bukti_url)
-                            <div class="border-t border-outline-variant/30 pt-3">
-                                <p class="text-xs text-on-surface-variant mb-2">Foto Bukti</p>
-                                <a href="{{ Storage::url($bukti->foto_bukti_url) }}" target="_blank">
-                                    <img src="{{ Storage::url($bukti->foto_bukti_url) }}"
-                                         alt="Foto Bukti"
-                                         class="w-48 h-48 rounded-xl border border-outline-variant object-cover hover:opacity-80 transition-all cursor-pointer"/>
-                                </a>
-                            </div>
-                            @endif
-                        </div>
-
-                        {{-- Riwayat --}}
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <p class="text-sm font-semibold text-on-surface">Riwayat Penyaluran</p>
-                                <a href="{{ route('bukti-penyerahan.show', $bukti->id_bukti) }}"
-                                   class="flex items-center gap-1 text-xs text-primary font-semibold hover:underline">
-                                    <span class="material-symbols-outlined text-sm">add_circle</span>
-                                    Tambah Riwayat
-                                </a>
-                            </div>
-                            @if($bukti->riwayat->count() > 0)
-                                <div class="relative">
-                                    <div class="absolute left-3.5 top-0 bottom-0 w-0.5 bg-outline-variant/50"></div>
-                                    <div class="space-y-3 pl-10">
-                                        @foreach($bukti->riwayat as $riwayat)
-                                        <div class="relative">
-                                            <div class="absolute -left-6 top-1.5 w-3 h-3 rounded-full border-2 border-primary bg-white"></div>
-                                            <div class="bg-surface-container rounded-lg p-3">
-                                                <div class="flex items-center justify-between mb-1">
-                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold
-                                                        {{ $riwayat->status_penyaluran === 'selesai' ? 'bg-green-100 text-green-700' :
-                                                           ($riwayat->status_penyaluran === 'proses' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700') }}">
-                                                        {{ ucfirst($riwayat->status_penyaluran) }}
-                                                    </span>
-                                                    <span class="text-xs text-on-surface-variant">
-                                                        {{ $riwayat->waktu_pencatatan ? $riwayat->waktu_pencatatan->format('d M Y H:i') : '-' }}
-                                                    </span>
-                                                </div>
-                                                @if($riwayat->keterangan)
-                                                    <p class="text-xs text-on-surface-variant mt-1">{{ $riwayat->keterangan }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @else
-                                <div class="text-center py-6 bg-surface-container rounded-xl">
-                                    <p class="text-sm text-on-surface-variant">Belum ada riwayat penyaluran.</p>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </details>
-                @endforeach
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <a href="{{ route('bukti-penyerahan.show', $bukti->id_bukti) }}"
+                                       class="inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline">
+                                        <span class="material-symbols-outlined text-sm">visibility</span>
+                                        Detail
+                                    </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @else
-            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm flex flex-col items-center justify-center py-20 gap-4">
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm flex flex-col items-center justify-center py-20 gap-4" id="empty-state">
                 <span class="material-symbols-outlined text-6xl text-on-surface-variant opacity-30">assignment_turned_in</span>
                 <div class="text-center">
                     <p class="text-lg font-semibold text-on-surface">Belum ada bukti penyerahan</p>
@@ -137,6 +93,15 @@
                 </button>
             </div>
         @endif
+    </div>
+
+    <div class="flex justify-end mt-3">
+        <button onclick="bukaModal()"
+           class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:opacity-90 transition-all shadow-sm">
+            <span class="material-symbols-outlined text-base">add</span>
+            Tambah Bukti
+        </button>
+    </div>
 @endsection
 
 @push('scripts')
@@ -152,12 +117,11 @@
             </button>
         </div>
 
-        <form action="{{ route('bukti-penyerahan.store') }}" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
+        <form id="form-bukti" action="{{ route('bukti-penyerahan.store') }}" method="POST" enctype="multipart/form-data" class="px-6 py-5 space-y-4">
             @csrf
 
             @php
                 $myWarung = \App\Models\DataWarung::where('id_user', auth()->user()->id_user ?? auth()->id())->first();
-                $kupons   = \App\Models\kupon_digital::all();
             @endphp
 
             @if($myWarung)
@@ -172,13 +136,14 @@
             <div>
                 <label class="block text-sm font-semibold text-on-surface mb-1.5">Kupon <span class="text-red-500">*</span></label>
                 @if($kupons->count() > 0)
-                    <select name="id_kupon" required
+                    <select name="id_kupon" id="id_kupon" required
                         class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
                         <option value="">-- Pilih Kupon --</option>
                         @foreach($kupons as $kupon)
                             <option value="{{ $kupon->id_kupon }}">
                                 Kupon #{{ $kupon->id_kupon }}
                                 @if($kupon->kode_kupon) — {{ $kupon->kode_kupon }} @endif
+                                @if($kupon->transaksi?->penerima?->user?->nama_lengkap) — {{ $kupon->transaksi->penerima->user->nama_lengkap }} @endif
                             </option>
                         @endforeach
                     </select>
@@ -224,24 +189,9 @@
                     class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"></textarea>
             </div>
 
-            <div class="border-t border-outline-variant/40 pt-3">
-                <p class="text-sm font-bold text-on-surface mb-3">Status Awal Penyaluran</p>
-                <div>
-                    <label class="block text-sm font-semibold text-on-surface mb-1.5">Status <span class="text-red-500">*</span></label>
-                    <select name="status_penyaluran" required
-                        class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                        <option value="">-- Pilih Status --</option>
-                        <option value="pending">Pending</option>
-                        <option value="proses">Proses</option>
-                        <option value="selesai">Selesai</option>
-                    </select>
-                </div>
-                <div class="mt-3">
-                    <label class="block text-sm font-semibold text-on-surface mb-1.5">Keterangan</label>
-                    <textarea name="keterangan" rows="2"
-                        placeholder="Keterangan status..."
-                        class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"></textarea>
-                </div>
+            <div id="form-error" class="hidden flex items-start gap-2 bg-red-50 border border-red-200 text-red-800 rounded-lg px-3 py-2 text-sm">
+                <span class="material-symbols-outlined text-red-500 text-lg">error</span>
+                <span id="form-error-text"></span>
             </div>
 
             <div class="flex gap-3 pt-2">
@@ -249,7 +199,7 @@
                     class="flex-1 px-4 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-all">
                     Batal
                 </button>
-                <button type="submit"
+                <button type="submit" id="btn-simpan"
                     class="flex-1 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold hover:opacity-90 transition-all">
                     Simpan Bukti
                 </button>
@@ -267,6 +217,7 @@ function tutupModal() {
     document.getElementById('modal-bukti').classList.add('hidden');
     document.body.style.overflow = '';
     hapusFoto();
+    document.getElementById('form-error').classList.add('hidden');
 }
 function previewFoto(input) {
     if (input.files && input.files[0]) {
@@ -288,6 +239,108 @@ function hapusFoto() {
 }
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') tutupModal();
+});
+
+function statusBadge(status) {
+    let cls = 'bg-blue-100 text-blue-700';
+    if (status === 'selesai') cls = 'bg-green-100 text-green-700';
+    else if (status === 'proses') cls = 'bg-yellow-100 text-yellow-700';
+    return '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ' + cls + '">' +
+        status.charAt(0).toUpperCase() + status.slice(1) + '</span>';
+}
+
+function tampilkanAlert(text) {
+    const alert = document.getElementById('alert-success');
+    document.getElementById('alert-success-text').textContent = text;
+    alert.classList.remove('hidden');
+    alert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(function() { alert.classList.add('hidden'); }, 4000);
+}
+
+function tambahBaris(data) {
+    const container = document.getElementById('table-container');
+    let table = document.querySelector('#table-container table');
+    const emptyState = document.getElementById('empty-state');
+
+    if (emptyState) {
+        emptyState.remove();
+        container.innerHTML = '' +
+        '<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden">' +
+            '<div class="overflow-x-auto"><table class="w-full text-sm">' +
+                '<thead><tr class="border-b border-outline-variant/40 bg-surface-container text-xs uppercase tracking-wide text-on-surface-variant">' +
+                    '<th class="text-left px-5 py-3 font-semibold">ID</th>' +
+                    '<th class="text-left px-5 py-3 font-semibold">Kupon</th>' +
+                    '<th class="text-left px-5 py-3 font-semibold">Donatur</th>' +
+                    '<th class="text-left px-5 py-3 font-semibold">Penerima</th>' +
+                    '<th class="text-left px-5 py-3 font-semibold">Tanggal Penyerahan</th>' +
+                    '<th class="text-left px-5 py-3 font-semibold">Status</th>' +
+                    '<th class="text-left px-5 py-3 font-semibold">Foto</th>' +
+                    '<th class="text-left px-5 py-3 font-semibold">Aksi</th>' +
+                '</tr></thead><tbody></tbody>' +
+            '</table></div>' +
+        '</div>';
+        table = document.querySelector('#table-container table');
+    }
+
+    const tbody = table.querySelector('tbody');
+    const tr = document.createElement('tr');
+    tr.className = 'border-b border-outline-variant/20 hover:bg-surface-container-low transition-all';
+    tr.innerHTML = '' +
+        '<td class="px-5 py-3.5 font-semibold text-on-surface">#' + data.id_bukti + '</td>' +
+        '<td class="px-5 py-3.5">Kupon #' + (data.id_kupon || '-') + '</td>' +
+        '<td class="px-5 py-3.5">' + (data.donatur || '-') + '</td>' +
+        '<td class="px-5 py-3.5">' + (data.penerima || '-') + '</td>' +
+        '<td class="px-5 py-3.5">' + data.tanggal_penyerahan + '</td>' +
+        '<td class="px-5 py-3.5">' + statusBadge(data.status) + '</td>' +
+        '<td class="px-5 py-3.5">' + (data.foto_url
+            ? '<a href="' + data.foto_url + '" target="_blank">' +
+              '<img src="' + data.foto_url + '" alt="Foto Bukti" class="w-12 h-12 rounded-lg border border-outline-variant object-cover hover:opacity-80 transition-all cursor-pointer"/>' +
+              '</a>'
+            : '<span class="text-on-surface-variant">-</span>') + '</td>' +
+        '<td class="px-5 py-3.5">' +
+            '<a href="/bukti-penyerahan/' + data.id_bukti + '" class="inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline">' +
+                '<span class="material-symbols-outlined text-sm">visibility</span>Detail' +
+            '</a>' +
+        '</td>';
+    tbody.insertBefore(tr, tbody.firstChild);
+}
+
+document.getElementById('form-bukti').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const btn = document.getElementById('btn-simpan');
+    btn.disabled = true;
+    btn.textContent = 'Menyimpan...';
+    document.getElementById('form-error').classList.add('hidden');
+
+    const formData = new FormData(this);
+
+    fetch(this.action, {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+        body: formData,
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.success) {
+            tambahBaris(data.data);
+            tutupModal();
+            tampilkanAlert(data.message);
+            form.reset();
+        } else {
+            document.getElementById('form-error-text').textContent = data.message || 'Terjadi kesalahan.';
+            document.getElementById('form-error').classList.remove('hidden');
+        }
+    })
+    .catch(function() {
+        document.getElementById('form-error-text').textContent = 'Terjadi kesalahan jaringan. Coba lagi.';
+        document.getElementById('form-error').classList.remove('hidden');
+    })
+    .finally(function() {
+        btn.disabled = false;
+        btn.textContent = 'Simpan Bukti';
+    });
 });
 </script>
 @endpush

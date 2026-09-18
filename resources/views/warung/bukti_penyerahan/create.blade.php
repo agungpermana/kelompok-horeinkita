@@ -86,32 +86,6 @@
                     </div>
                 </div>
 
-                {{-- Riwayat Awal --}}
-                <div class="border-t border-outline-variant/40 pt-4">
-                    <p class="text-sm font-bold text-on-surface mb-4">Status Awal Penyaluran</p>
-                    <div class="space-y-4">
-
-                        <div>
-                            <label class="block text-sm font-semibold text-on-surface mb-1.5">Status <span class="text-red-500">*</span></label>
-                            <select name="status_penyaluran" required
-                                class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                                <option value="">-- Pilih Status --</option>
-                                <option value="pending" {{ old('status_penyaluran') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="proses" {{ old('status_penyaluran') == 'proses' ? 'selected' : '' }}>Proses</option>
-                                <option value="selesai" {{ old('status_penyaluran') == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                            </select>
-                            @error('status_penyaluran') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-on-surface mb-1.5">Keterangan</label>
-                            <textarea name="keterangan" rows="2"
-                                placeholder="Keterangan status penyaluran..."
-                                class="w-full px-3.5 py-2.5 border border-outline-variant rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none">{{ old('keterangan') }}</textarea>
-                        </div>
-                    </div>
-                </div>
-
                 {{-- Tombol --}}
                 <div class="flex gap-3 pt-2">
                     <a href="{{ route('bukti-penyerahan.index') }}"

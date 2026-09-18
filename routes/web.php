@@ -97,6 +97,10 @@ Route::middleware(['auth'])->prefix('donatur')->name('donatur.')->group(function
     Route::post('/pembayaran/bayar', [DonaturDashboardController::class, 'bayar'])->name('bayar');
     Route::get('/riwayat', [DonaturDashboardController::class, 'riwayat'])->name('riwayat');
     Route::post('/riwayat/{id}/batalkan', [DonaturDashboardController::class, 'batalkan'])->name('riwayat.batalkan');
+    Route::get('/bukti-penyerahan', [DonaturDashboardController::class, 'buktiPenyerahan'])->name('bukti');
+    Route::get('/bukti-penyerahan/{id}', [DonaturDashboardController::class, 'buktiPenyerahanDetail'])->name('bukti.show');
+    Route::get('/data-penerima', [DonaturDashboardController::class, 'dataPenerima'])->name('penerima');
+    Route::get('/data-penerima/{id}', [DonaturDashboardController::class, 'dataPenerimaDetail'])->name('penerima.show');
 });
 
 Route::middleware('auth')->group(function () {

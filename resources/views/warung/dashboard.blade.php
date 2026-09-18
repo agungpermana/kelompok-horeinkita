@@ -4,20 +4,6 @@
 @section('active_menu', 'dashboard')
 @section('page_title', 'Dashboard Pemilik Warung')
 
-@section('header_actions')
-@php $myWarung = \App\Models\DataWarung::where('id_user', auth()->user()->id_user)->first(); @endphp
-<div class="flex items-center gap-3">
-    <div class="text-right hidden sm:block">
-        <p class="text-xs font-semibold text-on-surface">{{ $myWarung->nama_warung ?? 'Warung Anda' }}</p>
-        <p class="text-xs text-on-surface-variant">{{ $myWarung->lokasi_rw ?? '-' }}</p>
-    </div>
-    <a href="{{ route('warung.akun.edit') }}"
-       class="w-9 h-9 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-all" title="Profil & Akun">
-        <span class="material-symbols-outlined text-on-surface-variant text-xl">account_circle</span>
-    </a>
-</div>
-@endsection
-
 @section('content')
 @php
     $myWarung     = \App\Models\DataWarung::where('id_user', auth()->user()->id_user)->first();

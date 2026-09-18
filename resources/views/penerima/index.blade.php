@@ -91,6 +91,46 @@
         @endif
     </section>
 
+    {{-- Semua Kupon --}}
+    <section>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface mb-4">Semua Kupon</h2>
+
+        @if ($kupons->count() > 0)
+            <div class="flex flex-col gap-3">
+                @foreach ($kupons as $kupon)
+                    @php
+                        $aktif = in_array($kupon->status_kupon, ['aktif', 'tersedia']) && $kupon->buktiPenyerahan->isEmpty();
+                    @endphp
+                    <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-low border border-outline-variant {{ $aktif ? '' : 'opacity-70' }} flex items-center">
+                        <div class="w-12 h-12 rounded-xl {{ $aktif ? 'bg-surface-container text-primary' : 'bg-surface-container-low text-on-surface-variant' }} flex items-center justify-center mr-4">
+                            <span class="material-symbols-outlined" data-weight="fill">confirmation_number</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                <span class="font-label-md text-label-md text-on-surface font-mono tracking-wide">{{ $kupon->kode_kupon }}</span>
+                                @if ($aktif)
+                                    <span class="font-label-sm text-label-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Aktif</span>
+                                @else
+                                    <span class="font-label-sm text-label-sm bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Sudah Terpakai — Tidak Aktif</span>
+                                @endif
+                            </div>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                                Paket: {{ $kupon->transaksi?->paket?->nama_paket ?? 'Paket Sembako' }}
+                                <span class="w-1 h-1 rounded-full bg-outline-variant inline-block mx-1"></span>
+                                {{ $kupon->tanggal_kadaluarsa ? 'Berlaku s.d. ' . \Carbon\Carbon::parse($kupon->tanggal_kadaluarsa)->format('d M Y') : 'Tanpa tanggal kadaluarsa' }}
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant flex flex-col items-center justify-center py-12 gap-3 text-center">
+                <span class="material-symbols-outlined text-5xl text-on-surface-variant opacity-30">confirmation_number</span>
+                <p class="font-label-md text-label-md text-on-surface">Belum ada kupon</p>
+            </div>
+        @endif
+    </section>
+
     {{-- Riwayat Bantuan --}}
     <section>
         <h2 class="font-headline-sm text-headline-sm text-on-surface mb-4">Riwayat Bantuan</h2>

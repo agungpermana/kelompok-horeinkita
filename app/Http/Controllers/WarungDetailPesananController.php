@@ -51,7 +51,17 @@ class WarungDetailPesananController extends Controller
         $pesanan = transaksi_donasi::with('paket')->findOrFail($id);
 
         if (strtolower($pesanan->status_pembayaran ?? '') === 'pending') {
+            $paket = $pesanan->paket;
+            $jumlah = max(1, (int) $pesanan->jumlah_paket);
+
+            if (!$paket || $paket->stok < $jumlah) {
+                return back()->withErrors([
+                    'stok' => 'Stok paket ' . ($paket?->nama_paket ?? '-') . ' tidak mencukupi (' . ($paket?->stok ?? 0) . ' tersisa).',
+                ]);
+            }
+
             $pesanan->update(['status_pembayaran' => 'lunas']);
+            $paket->decrement('stok', $jumlah);
 
             if (!kupon_digital::where('id_transaksi', $pesanan->id_transaksi)->exists()) {
                 kupon_digital::create([

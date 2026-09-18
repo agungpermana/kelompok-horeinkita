@@ -166,11 +166,36 @@
                 <h1 class="font-headline-md text-headline-md text-on-surface">@yield('page_title', 'Dashboard')</h1>
             </div>
             @yield('header_actions')
-            <div class="flex items-center gap-3 px-4 py-2 rounded-lg">
-                <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
-                <div>
-                    <p class="text-sm font-semibold text-on-surface truncate">{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}</p>
-                    <p class="text-xs text-on-surface-variant">Pemilik Warung</p>
+            <div class="relative" id="akunDropdownWrap">
+                @php $myWarung = \App\Models\DataWarung::where('id_user', auth()->user()->id_user)->first(); @endphp
+                <button type="button" id="akunDropdownToggle"
+                    class="flex items-center gap-3 rounded-lg p-1.5 pr-2 hover:bg-surface-container transition-all cursor-pointer" title="Profil & Akun">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-semibold text-on-surface leading-tight">{{ $myWarung->nama_warung ?? 'Warung Anda' }}</p>
+                        <p class="text-xs text-on-surface-variant leading-tight">{{ $myWarung->lokasi_rw ?? '-' }}</p>
+                    </div>
+                    <span class="w-9 h-9 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant text-xl">account_circle</span>
+                    </span>
+                </button>
+                <div id="akunDropdownMenu" class="hidden absolute right-0 top-full mt-2 w-52 rounded-xl bg-white border border-outline-variant shadow-lg py-2 z-50">
+                    <div class="px-4 py-2 border-b border-outline-variant/50 mb-1">
+                        <p class="text-sm font-semibold text-on-surface truncate">{{ auth()->user()->nama_lengkap ?? auth()->user()->name }}</p>
+                        <p class="text-xs text-on-surface-variant truncate">{{ auth()->user()->email ?? '' }}</p>
+                    </div>
+                    <a href="{{ route('warung.akun.edit') }}"
+                       class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-container-low transition-all">
+                        <span class="material-symbols-outlined text-base text-on-surface-variant">account_circle</span>
+                        Profil &amp; Akun
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-all text-left">
+                            <span class="material-symbols-outlined text-base">logout</span>
+                            Keluar
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>
@@ -181,6 +206,25 @@
     </main>
 
     @stack('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var wrap   = document.getElementById('akunDropdownWrap');
+            var toggle = document.getElementById('akunDropdownToggle');
+            var menu   = document.getElementById('akunDropdownMenu');
+
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!wrap.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -18,14 +18,31 @@ class BuktiPenyerahanController extends Controller
     {
         $warung = DataWarung::where('id_user', auth()->user()->id_user)->first();
 
-        $buktis = bukti_penyerahan::with(['kupon', 'riwayat' => function ($q) {
-                        $q->orderBy('waktu_pencatatan', 'desc');
-                    }])
+        $buktis = bukti_penyerahan::with([
+                        'kupon.transaksi.donatur',
+                        'kupon.transaksi.penerima.user',
+                        'riwayat' => function ($q) {
+                            $q->orderBy('waktu_pencatatan', 'desc');
+                        },
+                    ])
                     ->when($warung, fn($q) => $q->where('id_warung', $warung->id_warung))
                     ->orderBy('tanggal_penyerahan', 'desc')
                     ->get();
 
-        return view('warung.bukti_penyerahan.index', compact('buktis', 'warung'));
+        $kupons = kupon_digital::with('transaksi')
+                    ->when($warung, function ($q) use ($warung) {
+                        $q->whereDoesntHave('buktiPenyerahan', function ($q2) use ($warung) {
+                            $q2->where('id_warung', $warung->id_warung);
+                        });
+                    })
+                    ->where(function ($q) {
+                        $q->where('status_kupon', '!=', 'terpakai')
+                          ->orWhereNull('status_kupon');
+                    })
+                    ->orderBy('id_kupon', 'desc')
+                    ->get();
+
+        return view('warung.bukti_penyerahan.index', compact('buktis', 'warung', 'kupons'));
     }
 
     /**
@@ -40,6 +57,10 @@ class BuktiPenyerahanController extends Controller
                         $q->whereDoesntHave('buktiPenyerahan', function ($q2) use ($warung) {
                             $q2->where('id_warung', $warung->id_warung);
                         });
+                    })
+                    ->where(function ($q) {
+                        $q->where('status_kupon', '!=', 'terpakai')
+                          ->orWhereNull('status_kupon');
                     })
                     ->get();
 
@@ -56,13 +77,10 @@ class BuktiPenyerahanController extends Controller
             'foto_bukti'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'catatan_penyerahan' => 'nullable|string',
             'tanggal_penyerahan' => 'required|date',
-            'status_penyaluran'  => 'required|string|max:50',
-            'keterangan'         => 'nullable|string',
         ]);
 
         $warung = DataWarung::where('id_user', auth()->user()->id_user)->firstOrFail();
 
-        // Handle upload foto
         $fotoPath = null;
         if ($request->hasFile('foto_bukti') && $request->file('foto_bukti')->isValid()) {
             $fotoPath = $request->file('foto_bukti')->store('bukti_penyerahan', 'public');
@@ -76,13 +94,38 @@ class BuktiPenyerahanController extends Controller
             'tanggal_penyerahan' => $request->tanggal_penyerahan,
         ]);
 
-        // Otomatis buat riwayat pertama
         riwayat_penyaluran::create([
             'id_bukti'          => $bukti->id_bukti,
-            'status_penyaluran' => $request->status_penyaluran,
-            'keterangan'        => $request->keterangan,
+            'status_penyaluran' => 'pending',
+            'keterangan'        => 'Bukti penyerahan baru dibuat',
             'waktu_pencatatan'  => now(),
         ]);
+
+        if ($request->id_kupon) {
+            kupon_digital::where('id_kupon', $request->id_kupon)
+                ->update(['status_kupon' => 'terpakai']);
+        }
+
+        if ($request->ajax()) {
+            $bukti->load(['kupon.transaksi.donatur', 'kupon.transaksi.penerima.user']);
+
+            $transaksi = $bukti->kupon?->transaksi;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Bukti penyerahan berhasil ditambahkan.',
+                'data' => [
+                    'id_bukti'          => $bukti->id_bukti,
+                    'id_kupon'          => $bukti->id_kupon,
+                    'tanggal_penyerahan' => $bukti->tanggal_penyerahan->format('d M Y'),
+                    'catatan_penyerahan' => $bukti->catatan_penyerahan ?? '-',
+                    'status'            => $bukti->riwayat->first()->status_penyaluran ?? 'pending',
+                    'donatur'           => $transaksi?->donatur?->nama_lengkap ?? '-',
+                    'penerima'          => $transaksi?->penerima?->user?->nama_lengkap ?? '-',
+                    'foto_url'          => $bukti->foto_bukti_url ? \Storage::url($bukti->foto_bukti_url) : null,
+                ],
+            ]);
+        }
 
         return redirect()
             ->route('bukti-penyerahan.index')

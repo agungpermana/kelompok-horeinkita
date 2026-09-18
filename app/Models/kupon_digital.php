@@ -21,4 +21,9 @@ class kupon_digital extends Model
     {
         return $this->belongsTo(transaksi_donasi::class, 'id_transaksi', 'id_transaksi');
     }
+
+    public function buktiPenyerahan()
+    {
+        return $this->hasMany(bukti_penyerahan::class, 'id_kupon', 'id_kupon');
+    }
 }

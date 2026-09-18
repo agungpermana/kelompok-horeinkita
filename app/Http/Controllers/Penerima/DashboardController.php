@@ -16,6 +16,7 @@ class DashboardController extends Controller
 
         $kuponAktif = kupon_digital::query()
             ->whereIn('status_kupon', ['aktif', 'tersedia'])
+            ->whereDoesntHave('buktiPenyerahan')
             ->whereHas('transaksi', fn ($query) => $query->where('id_penerima', $penerima?->id_penerima))
             ->with(['transaksi.paket.warung'])
             ->latest()
@@ -27,6 +28,12 @@ class DashboardController extends Controller
             ->orderByDesc('tanggal_penyerahan')
             ->get();
 
-        return view('penerima.index', compact('penerima', 'kuponAktif', 'riwayat'));
+        $kupons = kupon_digital::query()
+            ->whereHas('transaksi', fn ($query) => $query->where('id_penerima', $penerima?->id_penerima))
+            ->with(['transaksi.paket', 'buktiPenyerahan'])
+            ->latest()
+            ->get();
+
+        return view('penerima.index', compact('penerima', 'kuponAktif', 'riwayat', 'kupons'));
     }
 }

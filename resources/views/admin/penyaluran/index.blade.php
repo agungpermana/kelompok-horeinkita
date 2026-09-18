@@ -82,9 +82,9 @@
                             </td>
                             <td class="px-stack-lg py-stack-md">
                                 @if ($b->foto_bukti_url)
-                                    <a href="{{ $b->foto_bukti_url }}" target="_blank" class="block">
+                                    <a href="{{ Storage::url($b->foto_bukti_url) }}" target="_blank" class="block">
                                         <img class="w-16 h-16 object-cover rounded-lg border border-outline-variant"
-                                            src="{{ $b->foto_bukti_url }}" alt="Foto Bukti" />
+                                            src="{{ Storage::url($b->foto_bukti_url) }}" alt="Foto Bukti" />
                                     </a>
                                 @else
                                     <span class="font-body-sm text-on-surface-variant">-</span>

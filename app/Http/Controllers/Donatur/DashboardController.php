@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Donatur;
 
 use App\Http\Controllers\Controller;
+use App\Models\bukti_penyerahan;
+use App\Models\DataSurvey;
 use App\Models\data_penerima;
 use App\Models\katalog_paket;
 use App\Models\transaksi_donasi;
@@ -121,5 +123,68 @@ class DashboardController extends Controller
         }
 
         return back()->with('success', 'Pesanan #' . $transaksi->id_transaksi . ' berhasil dibatalkan.');
+    }
+
+    /**
+     * Daftar bukti penyerahan milik donatur yang login.
+     */
+    public function buktiPenyerahan()
+    {
+        $buktis = bukti_penyerahan::with([
+                        'kupon.transaksi.penerima.user',
+                        'warung',
+                        'riwayat' => function ($q) {
+                            $q->orderBy('waktu_pencatatan', 'desc');
+                        },
+                    ])
+                    ->whereHas('kupon.transaksi', function ($q) {
+                        $q->where('id_donatur', auth()->user()->id_user);
+                    })
+                    ->orderBy('tanggal_penyerahan', 'desc')
+                    ->get();
+
+        return view('donatur.bukti_penyerahan.index', compact('buktis'));
+    }
+
+    /**
+     * Detail bukti penyerahan milik donatur yang login.
+     */
+    public function buktiPenyerahanDetail($id)
+    {
+        $bukti = bukti_penyerahan::with([
+                        'kupon.transaksi.penerima.user',
+                        'warung',
+                        'riwayat' => function ($q) {
+                            $q->orderBy('waktu_pencatatan', 'desc');
+                        },
+                    ])
+                    ->whereHas('kupon.transaksi', function ($q) {
+                        $q->where('id_donatur', auth()->user()->id_user);
+                    })
+                    ->findOrFail($id);
+
+        return view('donatur.bukti_penyerahan.show', compact('bukti'));
+    }
+
+    /**
+     * Daftar seluruh penerima bantuan dari survey berjenis Penerima.
+     */
+    public function dataPenerima()
+    {
+        $surveys = DataSurvey::where('jenis_survey', 'Penerima')
+                    ->orderBy('id_survey', 'desc')
+                    ->get();
+
+        return view('donatur.data_penerima.index', compact('surveys'));
+    }
+
+    /**
+     * Detail penerima bantuan + lampiran survey (foto kebawah).
+     */
+    public function dataPenerimaDetail($id)
+    {
+        $survey = DataSurvey::findOrFail($id);
+
+        return view('donatur.data_penerima.show', compact('survey'));
     }
 }
